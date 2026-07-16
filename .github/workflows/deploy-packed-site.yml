@@ -1,0 +1,75 @@
+name: Deploy Kaidan Library
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: true
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout packed source
+        uses: actions/checkout@v4
+
+      - name: Unpack source
+        run: |
+          mkdir source
+          cat packed-source/source.b64.part* | tr -d '\n' | base64 -d > source.tar.gz
+          echo "9e9355ed5800c6afaa294d94ea400afd9b5a32374ea8f134546de54cae2155eb  source.tar.gz" | sha256sum -c -
+          tar -xzf source.tar.gz -C source
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Setup pnpm
+        run: npm install -g pnpm@10.14.0
+
+      - name: Install dependencies
+        working-directory: source
+        run: pnpm install --frozen-lockfile
+
+      - name: Content check
+        working-directory: source
+        run: pnpm run content:check
+
+      - name: Test
+        working-directory: source
+        run: pnpm run test
+
+      - name: Lint
+        working-directory: source
+        run: pnpm run lint
+
+      - name: Build
+        working-directory: source
+        env:
+          PUBLIC_SITE_URL: https://kohei-morita000.github.io
+          PUBLIC_BASE_PATH: /
+        run: pnpm run build
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: source/dist
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
