@@ -5,82 +5,49 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  check-site:
+  verify-live-site:
     runs-on: ubuntu-latest
     steps:
-      - name: Check candidate GitHub Pages URLs
+      - name: Verify published 夜語り site
         shell: bash
         run: |
-          set -u
-          urls=(
-            "https://kohei-morita000.github.io/yorugatari/"
-            "https://allsunday1122.github.io/Kohei-Morita000.github.io/yorugatari/"
-            "https://allsunday1122.github.io/yorugatari/"
-          )
+          set -euo pipefail
 
-          for url in "${urls[@]}"; do
-            echo "=== $url ==="
-            status=$(curl -L -sS -o page.html -w '%{http_code}' --max-time 30 "$url" || true)
-            final=$(curl -L -sS -o /dev/null -w '%{url_effective}' --max-time 30 "$url" || true)
-            title=$(sed -n 's:.*<title>\([^<]*\)</title>.*:\1:p' page.html | head -n 1 || true)
-            echo "HTTP_STATUS=$status"
-            echo "FINAL_URL=$final"
-            echo "TITLE=$title"
-          done
+          base="https://allsunday1122.github.io/Kohei-Morita000.github.io/yorugatari/"
+          expected_path="/Kohei-Morita000.github.io/yorugatari/"
 
-  fix-pages-url:
-    if: github.event_name == 'pull_request' && github.head_ref == 'agent/fix-pages-url'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out correction branch
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.head_ref }}
-          fetch-depth: 0
+          status=$(curl -L -sS -o index.html -w '%{http_code}' --max-time 30 "$base")
+          echo "HOME_STATUS=$status"
+          test "$status" = "200"
+          grep -F '<title>夜語り｜3分で読めるオリジナル怖い話</title>' index.html
+          grep -F "<link rel=\"canonical\" href=\"${base}\">" index.html
 
-      - name: Replace obsolete public URLs
-        shell: bash
-        run: |
-          python - <<'PY'
-          from pathlib import Path
+          curl -L -sS --max-time 30 "${base}sitemap.xml" -o sitemap.xml
+          url_count=$(grep -o '<url>' sitemap.xml | wc -l | tr -d ' ')
+          echo "SITEMAP_URLS=$url_count"
+          test "$url_count" = "17"
+          grep -F "${base}stories/last-elevator.html" sitemap.xml
 
-          old_site = "https://kohei-morita000.github.io/yorugatari/"
-          new_site = "https://allsunday1122.github.io/Kohei-Morita000.github.io/yorugatari/"
-          old_repo = "https://github.com/Kohei-Morita000/Kohei-Morita000.github.io"
-          new_repo = "https://github.com/ALLSUNDAY1122/Kohei-Morita000.github.io"
+          curl -L -sS --max-time 30 "${base}site.webmanifest" -o site.webmanifest
+          python - "$expected_path" <<'PY'
+          import json
+          import sys
 
-          extensions = {'.html', '.xml', '.txt', '.json', '.js', '.css'}
-          for path in Path('.').rglob('*'):
-              if not path.is_file() or '.git' in path.parts or path.suffix.lower() not in extensions:
-                  continue
-              text = path.read_text(encoding='utf-8')
-              updated = text.replace(old_site, new_site).replace(old_repo, new_repo)
-              if path.as_posix() == 'yorugatari/site.webmanifest':
-                  updated = updated.replace('"/yorugatari/"', '"/Kohei-Morita000.github.io/yorugatari/"')
-              if path.as_posix() == '404.html':
-                  updated = updated.replace('"/yorugatari/', '"/Kohei-Morita000.github.io/yorugatari/')
-                  updated = updated.replace("'/yorugatari/", "'/Kohei-Morita000.github.io/yorugatari/")
-              if updated != text:
-                  path.write_text(updated, encoding='utf-8')
+          expected = sys.argv[1]
+          with open('site.webmanifest', encoding='utf-8') as file:
+              manifest = json.load(file)
+          for key in ('id', 'start_url', 'scope'):
+              actual = manifest.get(key)
+              print(f'{key.upper()}={actual}')
+              if actual != expected:
+                  raise SystemExit(f'{key} mismatch: {actual!r}')
           PY
 
-          if grep -R -n "kohei-morita000.github.io/yorugatari" 404.html robots.txt yorugatari; then
-            echo "Obsolete Pages URL remains in published files."
-            exit 1
-          fi
+          curl -L -sS --max-time 30 "${base}stories/last-elevator.html" -o story.html
+          grep -F "<link rel=\"canonical\" href=\"${base}stories/last-elevator.html\">" story.html
 
-      - name: Commit URL corrections
-        shell: bash
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add 404.html robots.txt yorugatari
-          if git diff --cached --quiet; then
-            echo "No URL corrections required."
-            exit 0
-          fi
-          git commit -m "Fix GitHub Pages public URLs"
-          git push origin HEAD:${{ github.head_ref }}
+          curl -L -sS --max-time 30 "${base}contact.html" -o contact.html
+          grep -F 'https://github.com/ALLSUNDAY1122/Kohei-Morita000.github.io/issues/new' contact.html
