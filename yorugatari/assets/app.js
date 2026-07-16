@@ -10,7 +10,7 @@ function card(s){
   return `<a class="card" href="stories/${s.slug}.html" data-title="${s.title}" data-category="${s.category}" data-tags="${s.tags.join(' ')}">
     <div class="meta"><span class="badge">${s.category}</span><span>${s.length}</span><span>約${s.minutes}分</span></div>
     <h3>${s.title}</h3><p>${s.summary}</p>
-    <div class="card-foot"><span class="fear" aria-label="怖さ ${s.fear}/5">${flames}</span><span>${s.views.toLocaleString()} views</span></div>
+    <div class="card-foot"><span class="fear" aria-label="怖さ ${s.fear}/5">${flames}</span><span>オリジナル作品</span></div>
   </a>`
 }
 function render(){
