@@ -1,0 +1,36 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import Breadcrumbs from "@components/Breadcrumbs.astro";
+import { mainCategories } from "@data/taxonomy";
+import { getPublishedStories, categoryPath } from "@lib/stories";
+import { collectionJsonLd } from "@lib/seo";
+
+const stories = await getPublishedStories();
+---
+
+<BaseLayout title="カテゴリ一覧" description="怖い話をメインカテゴリから探せます。" jsonLd={collectionJsonLd("カテゴリ一覧", "/categories/", "怪談カテゴリの一覧")}>
+  <Breadcrumbs items={[{ href: "/categories/", label: "カテゴリ一覧" }]} />
+  <section class="hero">
+    <div class="container">
+      <p class="eyebrow">Categories</p>
+      <h1>カテゴリ一覧</h1>
+      <p>恐怖の原因や語り口から探せます。カテゴリページには、その分類の読みどころと該当作品を掲載します。</p>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container taxonomy-grid">
+      {
+        mainCategories.map((category) => {
+          const count = stories.filter((story) => story.data.mainCategory === category.label).length;
+          return (
+            <a class="taxonomy-card" href={categoryPath(category.slug)}>
+              <strong>{category.label}</strong>
+              <span>{count}件</span>
+              <p>{category.description}</p>
+            </a>
+          );
+        })
+      }
+    </div>
+  </section>
+</BaseLayout>

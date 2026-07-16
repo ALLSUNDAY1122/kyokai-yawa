@@ -1,0 +1,101 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import Breadcrumbs from "@components/Breadcrumbs.astro";
+import { getPublishedStories, storyPath } from "@lib/stories";
+import { fearLevels, lengthTypes, mainCategories } from "@data/taxonomy";
+import { collectionJsonLd } from "@lib/seo";
+
+const stories = await getPublishedStories();
+const randomData = stories.map((story) => ({
+  id: story.data.id,
+  title: story.data.title,
+  excerpt: story.data.excerpt,
+  href: storyPath(story),
+  category: story.data.mainCategory,
+  fear: story.data.fearLevel,
+  length: story.data.lengthType,
+}));
+---
+
+<BaseLayout title="ランダムな一話" description="全作品、カテゴリ、恐怖レベル、長さを指定してランダムに怖い話を選べます。" jsonLd={collectionJsonLd("ランダムな一話", "/random/", "条件を指定して怖い話をランダム表示するページ")}>
+  <Breadcrumbs items={[{ href: "/random/", label: "ランダム" }]} />
+  <section class="hero">
+    <div class="container">
+      <p class="eyebrow">Random</p>
+      <h1>ランダムな一話</h1>
+      <p>読むものに迷ったときは、条件だけ決めて一話選んでください。選択はこの端末内で完結します。</p>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container">
+      <form class="filter-panel" data-random-form>
+        <div class="story-grid two">
+          <label>
+            <span>カテゴリ</span>
+            <select class="select-field" name="category">
+              <option value="">指定なし</option>
+              {mainCategories.map((item) => <option value={item.label}>{item.label}</option>)}
+            </select>
+          </label>
+          <label>
+            <span>恐怖レベル</span>
+            <select class="select-field" name="fear">
+              <option value="">指定なし</option>
+              {fearLevels.map((item) => <option value={String(item.level)}>Lv.{item.level}</option>)}
+            </select>
+          </label>
+          <label>
+            <span>長さ</span>
+            <select class="select-field" name="length">
+              <option value="">指定なし</option>
+              {lengthTypes.map((item) => <option value={item.label}>{item.label}</option>)}
+            </select>
+          </label>
+        </div>
+        <button class="button" type="submit">一話選ぶ</button>
+      </form>
+      <article class="story-card" data-random-result hidden>
+        <a class="story-card-link" href="#">
+          <span class="story-card-category"></span>
+          <h2></h2>
+          <p></p>
+          <span class="button">この話を読む</span>
+        </a>
+      </article>
+      <p class="empty-state" data-random-empty hidden>条件に合う作品がありません。</p>
+    </div>
+  </section>
+  <script type="application/json" id="random-stories" set:html={JSON.stringify(randomData)} />
+  <script>
+    const stories = JSON.parse(document.getElementById("random-stories")?.textContent || "[]");
+    const form = document.querySelector("[data-random-form]");
+    const result = document.querySelector("[data-random-result]");
+    const empty = document.querySelector("[data-random-empty]");
+    const link = result?.querySelector("a");
+    const category = result?.querySelector(".story-card-category");
+    const title = result?.querySelector("h2");
+    const excerpt = result?.querySelector("p");
+
+    form?.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const data = new FormData(form);
+      const filtered = stories.filter((story) =>
+        (!data.get("category") || story.category === data.get("category")) &&
+        (!data.get("fear") || String(story.fear) === data.get("fear")) &&
+        (!data.get("length") || story.length === data.get("length"))
+      );
+      const picked = filtered[Math.floor(Math.random() * filtered.length)];
+      if (!picked) {
+        if (result) result.hidden = true;
+        if (empty) empty.hidden = false;
+        return;
+      }
+      if (link) link.href = picked.href;
+      if (category) category.textContent = picked.category;
+      if (title) title.textContent = picked.title;
+      if (excerpt) excerpt.textContent = picked.excerpt;
+      if (result) result.hidden = false;
+      if (empty) empty.hidden = true;
+    });
+  </script>
+</BaseLayout>

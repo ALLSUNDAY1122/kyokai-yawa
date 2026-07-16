@@ -1,0 +1,47 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import Breadcrumbs from "@components/Breadcrumbs.astro";
+import SectionHeader from "@components/SectionHeader.astro";
+import StoryCard from "@components/StoryCard.astro";
+import { getPublishedStories, slugifyLabel } from "@lib/stories";
+import { collectionJsonLd } from "@lib/seo";
+
+export async function getStaticPaths() {
+  const stories = await getPublishedStories();
+  const tags = Array.from(new Set(stories.flatMap((story) => story.data.tags)));
+  return tags.map((tag) => {
+    const taggedStories = stories.filter((story) => story.data.tags.includes(tag));
+    return {
+      params: { slug: slugifyLabel(tag) },
+      props: { tag, stories: taggedStories, noindex: taggedStories.length < 2 },
+    };
+  });
+}
+
+const { tag, stories, noindex } = Astro.props;
+---
+
+<BaseLayout
+  title={`タグ：${tag}`}
+  description={`タグ「${tag}」が付いた怖い話の一覧です。`}
+  canonical={`/tags/${slugifyLabel(tag)}/`}
+  noindex={noindex}
+  jsonLd={collectionJsonLd(`タグ：${tag}`, `/tags/${slugifyLabel(tag)}/`, `タグ「${tag}」が付いた怖い話の一覧`)}
+>
+  <Breadcrumbs items={[{ href: "/tags/", label: "タグ一覧" }, { href: `/tags/${slugifyLabel(tag)}/`, label: tag }]} />
+  <section class="hero">
+    <div class="container">
+      <p class="eyebrow">Tag</p>
+      <h1>タグ：{tag}</h1>
+      <p>同じモチーフや読後感を持つ作品です。少数タグは検索流入用の薄いページにならないよう、noindex対象にします。</p>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container">
+      <SectionHeader title="該当作品" description={`${stories.length}件の作品があります。`} />
+      <div class="story-grid">
+        {stories.map((story) => <StoryCard story={story} />)}
+      </div>
+    </div>
+  </section>
+</BaseLayout>

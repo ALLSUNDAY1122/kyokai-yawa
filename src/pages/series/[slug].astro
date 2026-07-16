@@ -1,0 +1,48 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import Breadcrumbs from "@components/Breadcrumbs.astro";
+import SectionHeader from "@components/SectionHeader.astro";
+import StoryCard from "@components/StoryCard.astro";
+import { getPublishedStories, slugifyLabel } from "@lib/stories";
+import { collectionJsonLd } from "@lib/seo";
+
+export async function getStaticPaths() {
+  const stories = await getPublishedStories();
+  const seriesNames = Array.from(new Set(stories.map((story) => story.data.series).filter(Boolean))) as string[];
+  return seriesNames.map((name) => ({
+    params: { slug: slugifyLabel(name) },
+    props: {
+      name,
+      stories: stories
+        .filter((story) => story.data.series === name)
+        .sort((a, b) => (a.data.episodeNumber || 0) - (b.data.episodeNumber || 0)),
+    },
+  }));
+}
+
+const { name, stories } = Astro.props;
+---
+
+<BaseLayout
+  title={`シリーズ：${name}`}
+  description={`怪談シリーズ「${name}」の作品一覧です。`}
+  canonical={`/series/${slugifyLabel(name)}/`}
+  jsonLd={collectionJsonLd(`シリーズ：${name}`, `/series/${slugifyLabel(name)}/`, `怪談シリーズ「${name}」の作品一覧`)}
+>
+  <Breadcrumbs items={[{ href: "/series/", label: "シリーズ一覧" }, { href: `/series/${slugifyLabel(name)}/`, label: name }]} />
+  <section class="hero">
+    <div class="container">
+      <p class="eyebrow">Series</p>
+      <h1>{name}</h1>
+      <p>シリーズの順番で読めるように並べています。</p>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container">
+      <SectionHeader title="収録作品" description={`${stories.length}話あります。`} />
+      <div class="story-grid">
+        {stories.map((story) => <StoryCard story={story} />)}
+      </div>
+    </div>
+  </section>
+</BaseLayout>

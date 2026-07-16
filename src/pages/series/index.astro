@@ -1,0 +1,30 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import Breadcrumbs from "@components/Breadcrumbs.astro";
+import { getPublishedStories, slugifyLabel } from "@lib/stories";
+import { collectionJsonLd } from "@lib/seo";
+
+const stories = await getPublishedStories();
+const seriesCounts = stories.reduce<Record<string, number>>((counts, story) => {
+  if (!story.data.series) return counts;
+  counts[story.data.series] = (counts[story.data.series] || 0) + 1;
+  return counts;
+}, {});
+const series = Object.entries(seriesCounts).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], "ja"));
+---
+
+<BaseLayout title="シリーズ一覧" description="同じ人物、場所、記録形式で続く怪談シリーズをまとめています。" jsonLd={collectionJsonLd("シリーズ一覧", "/series/", "怪談シリーズの一覧")}>
+  <Breadcrumbs items={[{ href: "/series/", label: "シリーズ一覧" }]} />
+  <section class="hero">
+    <div class="container">
+      <p class="eyebrow">Series</p>
+      <h1>シリーズ一覧</h1>
+      <p>同じ場所、語り手、記録に連なる作品をまとめています。読み終わったあとに続きへ進みやすい導線です。</p>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container taxonomy-grid">
+      {series.map(([name, count]) => <a class="taxonomy-card" href={`/series/${slugifyLabel(name)}/`}><strong>{name}</strong><span>{count}話</span></a>)}
+    </div>
+  </section>
+</BaseLayout>

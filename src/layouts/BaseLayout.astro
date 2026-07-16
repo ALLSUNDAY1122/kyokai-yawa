@@ -52,6 +52,7 @@ const imageUrl = absoluteUrl(image);
     <meta name="twitter:image" content={imageUrl} />
     <meta name="theme-color" content="#11100f" />
     <link rel="alternate" type="application/rss+xml" title={`${siteConfig.name} RSS`} href={absoluteUrl("/rss.xml")} />
+    <slot name="head" />
     {
       jsonLd && (
         <script type="application/ld+json" set:html={JSON.stringify(jsonLd).replaceAll("</", "<\\/")} />

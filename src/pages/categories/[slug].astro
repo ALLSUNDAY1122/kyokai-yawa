@@ -1,0 +1,47 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import Breadcrumbs from "@components/Breadcrumbs.astro";
+import SectionHeader from "@components/SectionHeader.astro";
+import StoryCard from "@components/StoryCard.astro";
+import { mainCategories } from "@data/taxonomy";
+import { categoryPath, getPublishedStories } from "@lib/stories";
+import { collectionJsonLd } from "@lib/seo";
+
+export async function getStaticPaths() {
+  const stories = await getPublishedStories();
+  return mainCategories.map((category) => ({
+    params: { slug: category.slug },
+    props: {
+      category,
+      stories: stories.filter((story) => story.data.mainCategory === category.label),
+    },
+  }));
+}
+
+const { category, stories } = Astro.props;
+---
+
+<BaseLayout
+  title={category.label}
+  description={category.description}
+  canonical={categoryPath(category.slug)}
+  jsonLd={collectionJsonLd(category.label, categoryPath(category.slug), category.description)}
+>
+  <Breadcrumbs items={[{ href: "/categories/", label: "カテゴリ一覧" }, { href: categoryPath(category.slug), label: category.label }]} />
+  <section class="hero">
+    <div class="container">
+      <p class="eyebrow">Category</p>
+      <h1>{category.label}</h1>
+      <p>{category.description}</p>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container">
+      <SectionHeader title="このカテゴリの作品" description={`${stories.length}件の作品があります。`} />
+      <div class="story-grid">
+        {stories.map((story) => <StoryCard story={story} />)}
+      </div>
+      {stories.length === 0 && <p class="empty-state">このカテゴリの公開作品はまだありません。</p>}
+    </div>
+  </section>
+</BaseLayout>

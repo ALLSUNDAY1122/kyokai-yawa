@@ -1,0 +1,177 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import AdSlot from "@components/AdSlot.astro";
+import SectionHeader from "@components/SectionHeader.astro";
+import StoryCard from "@components/StoryCard.astro";
+import { mainCategories, settings, lengthTypes } from "@data/taxonomy";
+import { getPublishedStories, slugifyLabel } from "@lib/stories";
+import { collectionJsonLd, websiteJsonLd } from "@lib/seo";
+
+const stories = await getPublishedStories();
+const latest = stories.slice(0, 6);
+const tonight = [...stories].sort((a, b) => b.data.editorialScore - a.data.editorialScore).slice(0, 3);
+const oneMinute = stories.filter((story) => story.data.lengthType === "1分怪談").slice(0, 6);
+const featured = stories.filter((story) => story.data.featured).slice(0, 6);
+const fearFive = stories.filter((story) => story.data.fearLevel === 5).slice(0, 3);
+const meaning = stories.filter((story) => story.data.mainCategory === "意味が分かると怖い話").slice(0, 3);
+const human = stories.filter((story) => story.data.mainCategory === "人間が怖い話").slice(0, 3);
+const seriesNames = Array.from(new Set(stories.map((story) => story.data.series).filter(Boolean))).slice(0, 6);
+const randomStory = stories[0];
+---
+
+<BaseLayout
+  title="怖い話を分類で探せる怪談ライブラリー"
+  description="闇語り文庫は、1分怪談、長編、意味が分かると怖い話、人間が怖い話を、舞台・恐怖レベル・結末から探せる怪談データベースです。"
+  jsonLd={[websiteJsonLd(), collectionJsonLd("闇語り文庫", "/", "怖い話を分類と検索で探せる怪談ライブラリー")]}
+>
+  <section class="hero">
+    <div class="container hero-grid">
+      <div>
+        <p class="eyebrow">Kaidan Archive</p>
+        <h1>闇語り文庫</h1>
+        <p>
+          1分で読める話から、眠る前にじっくり読む長編まで。恐怖の種類、舞台、長さ、結末で探せる怪談ライブラリーです。
+        </p>
+        <div class="hero-actions">
+          <a class="button" href="/random/">ランダムに一話読む</a>
+          <a class="ghost-button" href="/stories/?length=1%E5%88%86%E6%80%AA%E8%AB%87">1分で読める話</a>
+          <a class="ghost-button" href="/ranking/">最も怖い話へ</a>
+        </div>
+      </div>
+      <div class="search-panel">
+        <form class="search-form" action="/search/" role="search">
+          <label class="sr-only" for="home-search">怪談を検索</label>
+          <input id="home-search" name="q" type="search" placeholder="タイトル、舞台、タグで探す" />
+          <button class="button" type="submit">検索</button>
+        </form>
+        <ul class="chip-list" aria-label="よく使う分類">
+          <li><a href="/categories/meaning/">意味が分かる</a></li>
+          <li><a href="/categories/human-horror/">人間が怖い</a></li>
+          <li><a href="/stories/?fear=5">恐怖レベル5</a></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionHeader eyebrow="Tonight" title="今夜のおすすめ" description="編集部が優先して読んでほしい作品です。実閲覧数ではありません。" href="/ranking/" linkLabel="おすすめランキングへ" />
+      <div class="story-grid">
+        {tonight.map((story) => <StoryCard story={story} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionHeader title="1分で読める怖い話" description="短い休憩や移動中に読める作品です。" href="/stories/?length=1%E5%88%86%E6%80%AA%E8%AB%87" linkLabel="もっと見る" />
+      <div class="story-grid">
+        {oneMinute.map((story) => <StoryCard story={story} compact />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionHeader title="新着" href="/stories/" linkLabel="作品一覧へ" />
+      <div class="story-grid">
+        {latest.map((story) => <StoryCard story={story} />)}
+      </div>
+    </div>
+  </section>
+
+  <div class="container">
+    <AdSlot position="home-middle" />
+  </div>
+
+  <section class="section">
+    <div class="container">
+      <SectionHeader title="編集部おすすめ" description="品質確認済みの作品から選んだ導線です。" />
+      <div class="story-grid">
+        {featured.map((story) => <StoryCard story={story} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionHeader title="恐怖レベル5" description="強い怖さや後味の悪さを含む作品です。コンテンツ警告を確認してから読んでください。" />
+      <div class="story-grid">
+        {fearFive.map((story) => <StoryCard story={story} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionHeader title="意味が分かると怖い話" />
+      <div class="story-grid">
+        {meaning.map((story) => <StoryCard story={story} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionHeader title="人間が怖い話" />
+      <div class="story-grid">
+        {human.map((story) => <StoryCard story={story} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionHeader title="人気シリーズ" description="現段階では編集部による掲載シリーズです。実閲覧数ランキングではありません。" href="/series/" linkLabel="シリーズ一覧へ" />
+      <div class="taxonomy-grid">
+        {
+          seriesNames.map((name) => (
+            <a class="taxonomy-card" href={`/series/${slugifyLabel(String(name))}/`}>
+              <strong>{name}</strong>
+              <span>続けて読む</span>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionHeader title="舞台から探す" />
+      <div class="taxonomy-grid">
+        {settings.slice(0, 8).map((item) => <a class="taxonomy-card" href={`/stories/?setting=${encodeURIComponent(item.label)}`}><strong>{item.label}</strong><span>{item.description}</span></a>)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionHeader title="長さから探す" />
+      <div class="taxonomy-grid">
+        {lengthTypes.map((item) => <a class="taxonomy-card" href={`/stories/?length=${encodeURIComponent(item.label)}`}><strong>{item.label}</strong><span>{item.description}</span></a>)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionHeader title="ランダムな一話" description="迷ったら、分類を気にせず一話だけ開いてください。" />
+      {randomStory ? <StoryCard story={randomStory} /> : <p class="empty-state">公開中の作品がまだありません。</p>}
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container panel intro-panel">
+      <p class="eyebrow">First Visit</p>
+      <h2>初めての人へ</h2>
+      <p>
+        すぐ読みたい場合は「ランダム」、短時間なら「1分怪談」、じっくり読みたい場合は「長編」から始めてください。読んだ作品はこの端末の履歴に残せます。
+      </p>
+      <div class="button-row">
+        <a class="ghost-button" href="/about/">サイトの方針</a>
+        <a class="ghost-button" href="/submission-guidelines/">投稿ガイドライン</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

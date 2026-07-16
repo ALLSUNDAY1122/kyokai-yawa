@@ -1,0 +1,43 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import Breadcrumbs from "@components/Breadcrumbs.astro";
+import SectionHeader from "@components/SectionHeader.astro";
+import StoryCard from "@components/StoryCard.astro";
+import { getPublishedStories } from "@lib/stories";
+import { collectionJsonLd } from "@lib/seo";
+
+const stories = await getPublishedStories();
+const ranked = [...stories].sort((a, b) => b.data.editorialScore - a.data.editorialScore).slice(0, 30);
+const fearFive = stories.filter((story) => story.data.fearLevel === 5);
+---
+
+<BaseLayout
+  title="おすすめランキング"
+  description="闇語り文庫編集部が選ぶおすすめ怪談ランキングです。実閲覧数やユーザー評価ではありません。"
+  jsonLd={collectionJsonLd("おすすめランキング", "/ranking/", "編集部選定による怪談おすすめランキング")}
+>
+  <Breadcrumbs items={[{ href: "/ranking/", label: "おすすめランキング" }]} />
+  <section class="hero">
+    <div class="container">
+      <p class="eyebrow">Recommended Ranking</p>
+      <h1>おすすめランキング</h1>
+      <p>このページは実閲覧数、コメント数、ユーザー評価ではなく、編集部の品質確認と掲載方針に基づくおすすめ順です。</p>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container">
+      <SectionHeader title="編集部おすすめ順" />
+      <div class="story-grid">
+        {ranked.map((story) => <StoryCard story={story} />)}
+      </div>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container">
+      <SectionHeader title="恐怖レベル5" description="強い恐怖表現や後味の悪さを含む可能性があります。" />
+      <div class="story-grid">
+        {fearFive.map((story) => <StoryCard story={story} />)}
+      </div>
+    </div>
+  </section>
+</BaseLayout>

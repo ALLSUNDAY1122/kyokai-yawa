@@ -1,0 +1,33 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import Breadcrumbs from "@components/Breadcrumbs.astro";
+import { getPublishedStories, slugifyLabel } from "@lib/stories";
+import { collectionJsonLd } from "@lib/seo";
+
+const stories = await getPublishedStories();
+const tagCounts = stories.reduce<Record<string, number>>((counts, story) => {
+  story.data.tags.forEach((tag) => {
+    counts[tag] = (counts[tag] || 0) + 1;
+  });
+  return counts;
+}, {});
+const tags = Object.entries(tagCounts).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], "ja"));
+---
+
+<BaseLayout title="タグ一覧" description="怖い話をタグから探せます。記事数が少ないタグは将来noindex対象にする設計です。" jsonLd={collectionJsonLd("タグ一覧", "/tags/", "怪談タグの一覧")}>
+  <Breadcrumbs items={[{ href: "/tags/", label: "タグ一覧" }]} />
+  <section class="hero">
+    <div class="container">
+      <p class="eyebrow">Tags</p>
+      <h1>タグ一覧</h1>
+      <p>細かなモチーフや読後感から探せます。少数タグはむやみに増やさず、作品数が増えてから索引化します。</p>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container">
+      <ul class="chip-list">
+        {tags.map(([tag, count]) => <li><a href={`/tags/${slugifyLabel(tag)}/`}>{tag}（{count}）</a></li>)}
+      </ul>
+    </div>
+  </section>
+</BaseLayout>

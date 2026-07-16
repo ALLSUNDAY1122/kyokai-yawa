@@ -1,0 +1,148 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import AdSlot from "@components/AdSlot.astro";
+import Breadcrumbs from "@components/Breadcrumbs.astro";
+import SectionHeader from "@components/SectionHeader.astro";
+import StoryCard from "@components/StoryCard.astro";
+import { articleJsonLd } from "@lib/seo";
+import { adjacentStories, getPublishedStories, relatedStories, slugifyLabel, storyPath } from "@lib/stories";
+import { formatDate, toIsoDate } from "@lib/date";
+
+export async function getStaticPaths() {
+  const stories = await getPublishedStories();
+  return stories.map((story) => ({
+    params: { slug: story.data.slug },
+    props: { story, stories },
+  }));
+}
+
+const { story, stories } = Astro.props;
+const { Content } = await story.render();
+const related = relatedStories(story, stories, 4);
+const { previous, next } = adjacentStories(story, stories);
+const sameCategory = stories
+  .filter((item) => item.id !== story.id && item.data.mainCategory === story.data.mainCategory)
+  .slice(0, 3);
+const sameSetting = stories
+  .filter((item) => item.id !== story.id && item.data.setting.some((setting) => story.data.setting.includes(setting)))
+  .slice(0, 3);
+const shareUrl = Astro.url.toString();
+const shareText = `${story.data.title} | 闇語り文庫`;
+---
+
+<BaseLayout
+  title={story.data.seoTitle}
+  description={story.data.seoDescription}
+  canonical={storyPath(story)}
+  bodyClass="story-page"
+  jsonLd={articleJsonLd(story)}
+>
+  <div class="reading-progress" aria-hidden="true"><span data-reading-progress></span></div>
+  <Breadcrumbs items={[{ href: "/stories/", label: "作品一覧" }, { href: storyPath(story), label: story.data.title }]} />
+
+  <article data-story-page data-story-id={story.data.id} data-story-title={story.data.title} data-story-url={storyPath(story)}>
+    <header class="story-hero">
+      <p class="eyebrow">{story.data.mainCategory}</p>
+      <h1>{story.data.title}</h1>
+      <p class="story-lead">{story.data.excerpt}</p>
+      <dl class="story-info">
+        <div><dt>恐怖レベル</dt><dd>Lv.{story.data.fearLevel}</dd></div>
+        <div><dt>読了時間</dt><dd>{story.data.estimatedReadingMinutes}分</dd></div>
+        <div><dt>公開日</dt><dd><time datetime={toIsoDate(story.data.publishedAt)}>{formatDate(story.data.publishedAt)}</time></dd></div>
+        <div><dt>更新日</dt><dd><time datetime={toIsoDate(story.data.updatedAt)}>{formatDate(story.data.updatedAt)}</time></dd></div>
+      </dl>
+      <ul class="chip-list" aria-label="作品タグ">
+        <li><span class="chip is-strong">{story.data.lengthType}</span></li>
+        {story.data.setting.map((setting) => <li><a href={`/stories/?setting=${encodeURIComponent(setting)}`}>{setting}</a></li>)}
+        {story.data.tags.map((tag) => <li><a href={`/tags/${slugifyLabel(tag)}/`}>{tag}</a></li>)}
+      </ul>
+      {
+        story.data.contentWarning.length > 0 && (
+          <p class="notice" role="note">
+            コンテンツ警告：{story.data.contentWarning.join("、")}
+          </p>
+        )
+      }
+      <div class="reader-toolbar" aria-label="読書設定">
+        <button type="button" data-favorite-toggle aria-pressed="false">お気に入り</button>
+        <button type="button" data-theme-value="dark">暗色</button>
+        <button type="button" data-theme-value="black">黒</button>
+        <button type="button" data-theme-value="light">明色</button>
+        <select aria-label="文字サイズ" data-reader-setting="fontSize">
+          <option value="0.95">小</option>
+          <option value="1" selected>標準</option>
+          <option value="1.12">大</option>
+          <option value="1.24">特大</option>
+        </select>
+        <select aria-label="行間" data-reader-setting="lineHeight">
+          <option value="1.75">狭め</option>
+          <option value="1.95" selected>標準</option>
+          <option value="2.18">広め</option>
+        </select>
+        <select aria-label="本文幅" data-reader-setting="width">
+          <option value="640px">狭め</option>
+          <option value="720px" selected>標準</option>
+          <option value="840px">広め</option>
+        </select>
+      </div>
+    </header>
+
+    <div class="container">
+      <AdSlot position="article-before" />
+    </div>
+
+    <div class="prose" data-pagefind-body>
+      <Content />
+    </div>
+
+    <section class="story-end-nav" aria-labelledby="next-story-heading">
+      <p class="eyebrow">After Reading</p>
+      <h2 id="next-story-heading">次に読む</h2>
+      <div class="button-row">
+        {next && <a class="button" href={storyPath(next)}>次の作品へ</a>}
+        <a class="ghost-button" href="/random/">ランダムな一話</a>
+        <a class="ghost-button" href="#top">トップへ戻る</a>
+      </div>
+      <div class="split-nav">
+        {previous && <a href={storyPath(previous)}><span>前の作品</span><strong>{previous.data.title}</strong></a>}
+        {next && <a href={storyPath(next)}><span>次の作品</span><strong>{next.data.title}</strong></a>}
+      </div>
+      <div class="share-list" aria-label="SNS共有">
+        <a class="text-button" href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}`} rel="noopener noreferrer">Xで共有</a>
+        <a class="text-button" href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`} rel="noopener noreferrer">Facebook</a>
+        <button class="text-button" type="button" data-copy-url={shareUrl}>URLコピー</button>
+      </div>
+    </section>
+  </article>
+
+  <div class="container">
+    <AdSlot position="article-after" />
+  </div>
+
+  <section class="section">
+    <div class="container">
+      <SectionHeader title="同じカテゴリの作品" />
+      <div class="story-grid">
+        {sameCategory.map((item) => <StoryCard story={item} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionHeader title="同じ舞台の作品" />
+      <div class="story-grid">
+        {sameSetting.map((item) => <StoryCard story={item} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionHeader title="関連作品" />
+      <div class="story-grid">
+        {related.map((item) => <StoryCard story={item} />)}
+      </div>
+    </div>
+  </section>
+</BaseLayout>

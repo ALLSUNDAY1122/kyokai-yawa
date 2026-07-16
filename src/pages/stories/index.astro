@@ -1,0 +1,124 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import Breadcrumbs from "@components/Breadcrumbs.astro";
+import SectionHeader from "@components/SectionHeader.astro";
+import StoryCard from "@components/StoryCard.astro";
+import { endingTypes, fearLevels, lengthTypes, mainCategories, settings } from "@data/taxonomy";
+import { getPublishedStories } from "@lib/stories";
+import { collectionJsonLd } from "@lib/seo";
+
+const stories = await getPublishedStories();
+---
+
+<BaseLayout
+  title="作品一覧"
+  description="闇語り文庫の公開作品一覧です。カテゴリ、舞台、恐怖レベル、長さで怖い話を探せます。"
+  jsonLd={collectionJsonLd("作品一覧", "/stories/", "公開中の怖い話・怪談の一覧")}
+>
+  <Breadcrumbs items={[{ href: "/stories/", label: "作品一覧" }]} />
+  <section class="hero">
+    <div class="container">
+      <p class="eyebrow">Library</p>
+      <h1>作品一覧</h1>
+      <p>公開済みの怪談を一覧できます。主要条件はすぐ選べ、細かい条件は折りたたみの中にまとめています。</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <form class="filter-panel" data-story-filter>
+        <div class="story-grid two">
+          <label>
+            <span>カテゴリ</span>
+            <select class="select-field" name="category">
+              <option value="">すべて</option>
+              {mainCategories.map((item) => <option value={item.label}>{item.label}</option>)}
+            </select>
+          </label>
+          <label>
+            <span>長さ</span>
+            <select class="select-field" name="length">
+              <option value="">すべて</option>
+              {lengthTypes.map((item) => <option value={item.label}>{item.label}</option>)}
+            </select>
+          </label>
+          <label>
+            <span>恐怖レベル</span>
+            <select class="select-field" name="fear">
+              <option value="">すべて</option>
+              {fearLevels.map((item) => <option value={String(item.level)}>Lv.{item.level}</option>)}
+            </select>
+          </label>
+          <label>
+            <span>舞台</span>
+            <select class="select-field" name="setting">
+              <option value="">すべて</option>
+              {settings.map((item) => <option value={item.label}>{item.label}</option>)}
+            </select>
+          </label>
+        </div>
+        <details>
+          <summary>詳細条件</summary>
+          <ul class="chip-list">
+            {endingTypes.map((item) => <li><a href={`/stories/?ending=${encodeURIComponent(item.label)}`}>{item.label}</a></li>)}
+          </ul>
+        </details>
+        <div class="button-row">
+          <button class="button" type="submit">条件を反映</button>
+          <a class="ghost-button" href="/stories/">解除</a>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionHeader title="公開作品" description={`${stories.length}件の作品があります。`} />
+      <div class="story-grid" data-story-list>
+        {stories.map((story) => <StoryCard story={story} />)}
+      </div>
+      <p class="empty-state" data-filter-empty hidden>条件に合う作品がありません。</p>
+    </div>
+  </section>
+
+  <script>
+    const form = document.querySelector("[data-story-filter]");
+    const cards = Array.from(document.querySelectorAll("[data-story-list] .story-card"));
+    const empty = document.querySelector("[data-filter-empty]");
+    const params = new URLSearchParams(window.location.search);
+    const fields = ["category", "length", "fear", "setting"];
+
+    fields.forEach((field) => {
+      const input = form?.querySelector(`[name="${field}"]`);
+      if (input && params.get(field)) input.value = params.get(field);
+    });
+
+    function applyFilters() {
+      const values = Object.fromEntries(fields.map((field) => [field, form?.querySelector(`[name="${field}"]`)?.value || ""]));
+      let visible = 0;
+      cards.forEach((card) => {
+        const matches =
+          (!values.category || card.dataset.category === values.category) &&
+          (!values.length || card.dataset.length === values.length) &&
+          (!values.fear || card.dataset.fear === values.fear) &&
+          (!values.setting || (card.dataset.setting || "").split(",").includes(values.setting));
+        card.hidden = !matches;
+        if (matches) visible += 1;
+      });
+      if (empty) empty.hidden = visible > 0;
+    }
+
+    form?.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const next = new URLSearchParams();
+      fields.forEach((field) => {
+        const value = form.querySelector(`[name="${field}"]`)?.value;
+        if (value) next.set(field, value);
+      });
+      history.replaceState(null, "", `${window.location.pathname}${next.toString() ? `?${next}` : ""}`);
+      applyFilters();
+    });
+
+    applyFilters();
+  </script>
+</BaseLayout>
