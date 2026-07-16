@@ -1,7 +1,6 @@
 document.documentElement.classList.add('js');
 
 const progress = document.querySelector('.progress');
-
 addEventListener('scroll', function () {
   const documentElement = document.documentElement;
   const max = documentElement.scrollHeight - documentElement.clientHeight;
@@ -10,7 +9,6 @@ addEventListener('scroll', function () {
 
 const explanationButton = document.querySelector('#explainBtn');
 const explanation = document.querySelector('#explanation');
-
 if (explanationButton && explanation) {
   if (!explanation.id) explanation.id = 'explanation';
   explanationButton.setAttribute('aria-controls', explanation.id);
@@ -26,7 +24,6 @@ const favoriteButton = document.querySelector('#favoriteBtn');
 const slug = document.body.dataset.slug;
 const storageKey = 'yorugatari-favorites';
 let favorites = [];
-
 try {
   const stored = JSON.parse(localStorage.getItem(storageKey) || '[]');
   favorites = Array.isArray(stored) ? stored : [];
@@ -44,35 +41,20 @@ function drawFavorite() {
 
 if (favoriteButton) {
   favoriteButton.addEventListener('click', function () {
-    favorites = favorites.includes(slug)
-      ? favorites.filter(function (item) { return item !== slug; })
-      : favorites.concat(slug);
-    try {
-      localStorage.setItem(storageKey, JSON.stringify(favorites));
-    } catch (error) {
-      // 保存制限があっても作品本文の閲覧は継続する。
-    }
+    favorites = favorites.includes(slug) ? favorites.filter(function (item) { return item !== slug; }) : favorites.concat(slug);
+    try { localStorage.setItem(storageKey, JSON.stringify(favorites)); } catch (error) {}
     drawFavorite();
   });
 }
-
 drawFavorite();
 
 const shareButton = document.querySelector('#shareBtn');
 if (shareButton) {
   shareButton.addEventListener('click', async function () {
     const description = document.querySelector('meta[name="description"]');
-    const data = {
-      title: document.title,
-      text: description ? description.content : '',
-      url: location.href
-    };
-
+    const data = { title: document.title, text: description ? description.content : '', url: location.href };
     try {
-      if (navigator.share) {
-        await navigator.share(data);
-        return;
-      }
+      if (navigator.share) { await navigator.share(data); return; }
       if (navigator.clipboard && navigator.clipboard.writeText) {
         await navigator.clipboard.writeText(location.href);
         const original = shareButton.textContent;
@@ -88,4 +70,13 @@ if (shareButton) {
       }
     }
   });
+}
+
+const footer = document.querySelector('.footer-inner');
+if (footer && !footer.querySelector('.footer-links')) {
+  const links = document.createElement('nav');
+  links.className = 'footer-links';
+  links.setAttribute('aria-label', '運営情報');
+  links.innerHTML = '<a href="../about.html">運営・編集方針</a><a href="../privacy.html">プライバシー</a><a href="../terms.html">利用規約</a><a href="../contact.html">お問い合わせ</a>';
+  footer.appendChild(links);
 }
