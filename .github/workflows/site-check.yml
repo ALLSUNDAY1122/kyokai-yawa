@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   check-site:
@@ -30,3 +30,57 @@ jobs:
             echo "FINAL_URL=$final"
             echo "TITLE=$title"
           done
+
+  fix-pages-url:
+    if: github.event_name == 'pull_request' && github.head_ref == 'agent/fix-pages-url'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out correction branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+
+      - name: Replace obsolete public URLs
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          old_site = "https://kohei-morita000.github.io/yorugatari/"
+          new_site = "https://allsunday1122.github.io/Kohei-Morita000.github.io/yorugatari/"
+          old_repo = "https://github.com/Kohei-Morita000/Kohei-Morita000.github.io"
+          new_repo = "https://github.com/ALLSUNDAY1122/Kohei-Morita000.github.io"
+
+          extensions = {'.html', '.xml', '.txt', '.json', '.js', '.css'}
+          for path in Path('.').rglob('*'):
+              if not path.is_file() or '.git' in path.parts or path.suffix.lower() not in extensions:
+                  continue
+              text = path.read_text(encoding='utf-8')
+              updated = text.replace(old_site, new_site).replace(old_repo, new_repo)
+              if path.as_posix() == 'yorugatari/site.webmanifest':
+                  updated = updated.replace('"/yorugatari/"', '"/Kohei-Morita000.github.io/yorugatari/"')
+              if path.as_posix() == '404.html':
+                  updated = updated.replace('"/yorugatari/', '"/Kohei-Morita000.github.io/yorugatari/')
+                  updated = updated.replace("'/yorugatari/", "'/Kohei-Morita000.github.io/yorugatari/")
+              if updated != text:
+                  path.write_text(updated, encoding='utf-8')
+          PY
+
+          if grep -R --exclude-dir=.git -n "kohei-morita000.github.io/yorugatari" .; then
+            echo "Obsolete Pages URL remains."
+            exit 1
+          fi
+
+      - name: Commit URL corrections
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add 404.html robots.txt yorugatari
+          if git diff --cached --quiet; then
+            echo "No URL corrections required."
+            exit 0
+          fi
+          git commit -m "Fix GitHub Pages public URLs"
+          git push origin HEAD:${{ github.head_ref }}
