@@ -67,8 +67,8 @@ jobs:
                   path.write_text(updated, encoding='utf-8')
           PY
 
-          if grep -R --exclude-dir=.git -n "kohei-morita000.github.io/yorugatari" .; then
-            echo "Obsolete Pages URL remains."
+          if grep -R -n "kohei-morita000.github.io/yorugatari" 404.html robots.txt yorugatari; then
+            echo "Obsolete Pages URL remains in published files."
             exit 1
           fi
 
