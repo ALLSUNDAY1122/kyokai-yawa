@@ -5,9 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build && pagefind --site dist",
+    "build": "astro build && pagefind --site dist && node scripts/link-check.mjs",
     "preview": "astro preview",
-    "lint": "astro check && node scripts/link-check.mjs",
+    "lint": "astro check",
     "test": "vitest run",
     "content:check": "node scripts/content-check.mjs"
   },

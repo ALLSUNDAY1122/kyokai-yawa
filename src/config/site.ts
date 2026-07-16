@@ -7,7 +7,7 @@ export const siteConfig = {
   author: "闇語り文庫編集部",
   locale: "ja_JP",
   defaultOgImage: "/og.png",
-  contactEmail: "contact@example.com",
+  contactEmail: import.meta.env.PUBLIC_CONTACT_EMAIL || "contact@example.com",
 };
 
 export function withBase(path: string) {
