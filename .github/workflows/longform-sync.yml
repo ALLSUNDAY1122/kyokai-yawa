@@ -33,8 +33,94 @@ jobs:
           config_dir = root / 'editorial' / 'longform'
           configs = sorted(config_dir.glob('*-publish.json'))
 
+          def apply_accessibility_audit():
+              story_paths = sorted((root / 'stories').glob('*.html'))
+              if len(story_paths) != 12:
+                  raise SystemExit(f'expected 12 story pages, found {len(story_paths)}')
+
+              footer_nav = (
+                  '<nav class="footer-links" aria-label="運営情報">'
+                  '<a href="../about.html">運営・編集方針</a>'
+                  '<a href="../privacy.html">プライバシー</a>'
+                  '<a href="../terms.html">利用規約</a>'
+                  '<a href="../contact.html">お問い合わせ</a>'
+                  '</nav>'
+              )
+
+              for story_path in story_paths:
+                  page = story_path.read_text(encoding='utf-8')
+                  page = re.sub(
+                      r'(<body\s+data-slug="[^"]+">)(?!<a class="skip-link")',
+                      r'\1<a class="skip-link" href="#story-content">本文へ移動</a>',
+                      page,
+                      count=1,
+                  )
+                  page = page.replace(
+                      '<div class="progress"></div>',
+                      '<div class="progress" aria-hidden="true"></div>',
+                      1,
+                  )
+                  page = page.replace(
+                      '<nav class="nav">',
+                      '<nav class="nav" aria-label="主要メニュー">',
+                      1,
+                  )
+                  page = page.replace(
+                      '<main>',
+                      '<main id="story-content" tabindex="-1">',
+                      1,
+                  )
+                  page = page.replace(
+                      '<button class="btn" id="explainBtn">',
+                      '<button class="btn" id="explainBtn" type="button" aria-controls="explanation" aria-expanded="false">',
+                  )
+                  page = page.replace(
+                      '<button class="btn favorite" id="favoriteBtn">',
+                      '<button class="btn favorite" id="favoriteBtn" type="button" aria-pressed="false">',
+                  )
+                  page = page.replace(
+                      '<button class="btn" id="shareBtn">',
+                      '<button class="btn" id="shareBtn" type="button">',
+                  )
+                  page = re.sub(
+                      r'<span class="rank-num"(?![^>]*aria-hidden)>',
+                      '<span class="rank-num" aria-hidden="true">',
+                      page,
+                  )
+                  page = page.replace('<h3>作品情報</h3>', '<h2>作品情報</h2>')
+                  page = page.replace('<h3>次に読む</h3>', '<h2>次に読む</h2>')
+
+                  def label_fear(match):
+                      text = match.group(1)
+                      level = text.count('●')
+                      return f'<span class="fear" aria-label="怖さ {level}/5">{text}</span>'
+
+                  page = re.sub(
+                      r'<span class="fear"(?:\s+aria-label="[^"]*")?>([^<]+)</span>',
+                      label_fear,
+                      page,
+                      count=1,
+                  )
+                  if 'class="footer-links"' not in page:
+                      page = page.replace(
+                          '<span>掲載作品はフィクションです。</span></div></footer>',
+                          '<span>掲載作品はフィクションです。</span>' + footer_nav + '</div></footer>',
+                          1,
+                      )
+                  story_path.write_text(page, encoding='utf-8')
+
+              css_path = root / 'assets' / 'styles.css'
+              css = css_path.read_text(encoding='utf-8')
+              css = css.replace('.side-box h3{', '.side-box h2,.side-box h3{')
+              css_path.write_text(css, encoding='utf-8')
+
           for config_path in configs:
               config = json.loads(config_path.read_text(encoding='utf-8'))
+              if config.get('accessibility_audit'):
+                  apply_accessibility_audit()
+                  config_path.unlink()
+                  continue
+
               slug = config['slug']
               minutes = int(config['minutes'])
               length = config.get('length', '長編')
@@ -55,7 +141,7 @@ jobs:
               article = ''.join(paragraphs)
               if explanation:
                   article += (
-                      '<button class="btn" id="explainBtn">解説を見る</button>'
+                      '<button class="btn" id="explainBtn" type="button" aria-controls="explanation" aria-expanded="false">解説を見る</button>'
                       '<div class="explanation" id="explanation"><strong>解説</strong>'
                       f'<p>{html.escape(explanation, quote=False)}</p></div>'
                   )
@@ -128,8 +214,72 @@ jobs:
         run: |
           node --check yorugatari/assets/stories.js
           node --check yorugatari/assets/story.js
-          grep -F '約8分' yorugatari/stories/last-elevator.html
-          grep -F '"minutes": 8' yorugatari/assets/stories.js
+          python - <<'PY'
+          from collections import Counter
+          from pathlib import Path
+          import re
+
+          root = Path('yorugatari')
+          stories = sorted((root / 'stories').glob('*.html'))
+          if len(stories) != 12:
+              raise SystemExit(f'expected 12 story pages, found {len(stories)}')
+
+          for path in stories:
+              text = path.read_text(encoding='utf-8')
+              required = [
+                  '<html lang="ja">',
+                  'name="viewport"',
+                  '<a class="skip-link" href="#story-content">本文へ移動</a>',
+                  '<div class="progress" aria-hidden="true"></div>',
+                  '<nav class="nav" aria-label="主要メニュー">',
+                  '<main id="story-content" tabindex="-1">',
+                  'id="favoriteBtn" type="button" aria-pressed="false"',
+                  'id="shareBtn" type="button"',
+                  'id="explainBtn" type="button" aria-controls="explanation" aria-expanded="false"',
+                  'class="footer-links" aria-label="運営情報"',
+              ]
+              for needle in required:
+                  if needle not in text:
+                      raise SystemExit(f'missing accessibility marker in {path}: {needle}')
+              if len(re.findall(r'<h1(?:\s|>)', text)) != 1:
+                  raise SystemExit(f'expected one h1 in {path}')
+              if '<h3>作品情報</h3>' in text or '<h3>次に読む</h3>' in text:
+                  raise SystemExit(f'heading hierarchy not updated in {path}')
+              if re.search(r'<button(?![^>]*\stype=)[^>]*>', text):
+                  raise SystemExit(f'button without type in {path}')
+              if re.search(r'<span class="rank-num"(?![^>]*aria-hidden)', text):
+                  raise SystemExit(f'decorative marker exposed in {path}')
+
+              ids = re.findall(r'\sid="([^"]+)"', text)
+              duplicates = [item for item, count in Counter(ids).items() if count > 1]
+              if duplicates:
+                  raise SystemExit(f'duplicate ids in {path}: {duplicates}')
+
+              links = re.findall(r'<a\b[^>]*\bhref="([^"]*)"', text)
+              if not links or any(not href for href in links):
+                  raise SystemExit(f'empty or missing links in {path}')
+              for href in links:
+                  if href.startswith(('http://', 'https://', 'mailto:', 'tel:')):
+                      continue
+                  target_part, _, fragment = href.partition('#')
+                  target = path if not target_part else path.parent / target_part
+                  target = target.resolve()
+                  if not target.exists():
+                      raise SystemExit(f'broken local link in {path}: {href}')
+                  if fragment:
+                      target_text = target.read_text(encoding='utf-8')
+                      if f'id="{fragment}"' not in target_text:
+                          raise SystemExit(f'missing fragment target in {path}: {href}')
+
+              if len(re.findall(r'class="rank-item"', text)) != 2:
+                  raise SystemExit(f'expected two related links in {path}')
+
+          css = (root / 'assets' / 'styles.css').read_text(encoding='utf-8')
+          for needle in ('.skip-link', ':focus-visible', '@media(max-width:900px)', '@media(max-width:600px)', '@media(prefers-reduced-motion:reduce)'):
+              if needle not in css:
+                  raise SystemExit(f'missing responsive/accessibility CSS: {needle}')
+          print('Accessibility and internal-link checks passed for 12 story pages.')
+          PY
 
       - name: Commit generated content
         shell: bash
@@ -141,5 +291,5 @@ jobs:
             echo "No generated changes."
             exit 0
           fi
-          git commit -m "Publish longform story content"
+          git commit -m "Improve story page accessibility"
           git push origin HEAD:${{ github.head_ref }}
