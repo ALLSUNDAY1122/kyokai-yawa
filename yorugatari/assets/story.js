@@ -1,21 +1,35 @@
 document.documentElement.classList.add('js');
 
 const readingMinutes = {
-  'last-elevator': 2,
-  'neighbor-wifi': 2,
-  'kind-manager': 2,
-  'family-photo': 2,
-  'three-knocks': 2,
-  'read-receipt': 1,
-  'night-bus': 2,
-  'delivery-box': 2,
-  'voice-memo': 2,
-  'missing-floor': 2,
-  'good-night': 2,
-  'window-reflection': 1
+  'last-elevator': 5,
+  'neighbor-wifi': 5,
+  'kind-manager': 5,
+  'family-photo': 5,
+  'three-knocks': 5,
+  'read-receipt': 5,
+  'night-bus': 5,
+  'delivery-box': 5,
+  'voice-memo': 5,
+  'missing-floor': 5,
+  'good-night': 5,
+  'window-reflection': 5
 };
 
+const mainContent = document.querySelector('main');
+if (mainContent) {
+  if (!mainContent.id) mainContent.id = 'story-content';
+  if (!mainContent.hasAttribute('tabindex')) mainContent.setAttribute('tabindex', '-1');
+  if (!document.querySelector('.skip-link')) {
+    const skipLink = document.createElement('a');
+    skipLink.className = 'skip-link';
+    skipLink.href = '#' + mainContent.id;
+    skipLink.textContent = '本文へ移動';
+    document.body.insertAdjacentElement('afterbegin', skipLink);
+  }
+}
+
 const progress = document.querySelector('.progress');
+if (progress) progress.setAttribute('aria-hidden', 'true');
 addEventListener('scroll', function () {
   const documentElement = document.documentElement;
   const max = documentElement.scrollHeight - documentElement.clientHeight;
@@ -34,7 +48,9 @@ document.querySelectorAll('.rank-item').forEach(function (item) {
   const relatedSlug = href.replace(/^.*\//, '').replace(/\.html(?:#.*)?$/, '');
   const minutes = readingMinutes[relatedSlug];
   const detail = item.querySelector('small');
+  const marker = item.querySelector('.rank-num');
   if (minutes && detail) detail.textContent = detail.textContent.replace(/約\d+分/, '約' + minutes + '分');
+  if (marker) marker.setAttribute('aria-hidden', 'true');
 });
 
 const mainNav = document.querySelector('.site-header .nav');
@@ -57,8 +73,12 @@ if (explanationButton && explanation) {
   if (!explanation.id) explanation.id = 'explanation';
   explanationButton.setAttribute('aria-controls', explanation.id);
   explanationButton.setAttribute('aria-expanded', 'false');
+  explanation.hidden = true;
+  explanation.classList.remove('open');
   explanationButton.addEventListener('click', function () {
-    const isOpen = explanation.classList.toggle('open');
+    const isOpen = explanation.hidden;
+    explanation.hidden = !isOpen;
+    explanation.classList.toggle('open', isOpen);
     explanationButton.setAttribute('aria-expanded', String(isOpen));
     explanationButton.textContent = isOpen ? '解説を閉じる' : '解説を見る';
   });
