@@ -67,6 +67,14 @@ jobs:
                   raise SystemExit(f'meta description not found: {story_path}')
               old_description = old_description_match.group(1)
               page = page.replace(old_description, description)
+              page, time_count = re.subn(
+                  r'("timeRequired"\s*:\s*")PT\d+M(")',
+                  rf'\g<1>PT{minutes}M\g<2>',
+                  page,
+                  count=1,
+              )
+              if time_count != 1:
+                  raise SystemExit(f'structured reading time not found: {story_path}')
               page = re.sub(
                   r'(<div class="meta"><span class="badge">[^<]+</span>)<span>[^<]+</span><span>約\d+分</span>',
                   rf'\1<span>{length}</span><span>約{minutes}分</span>',
