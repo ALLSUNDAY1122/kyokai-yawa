@@ -157,10 +157,10 @@ window.STORIES = [
     "slug": "window-reflection",
     "title": "窓に映る人数",
     "category": "意味怖",
-    "length": "掌編",
+    "length": "長編",
     "fear": 3,
-    "minutes": 1,
-    "summary": "旅行先で撮った集合写真。窓には、実際より一人多く映っていた。",
+    "minutes": 8,
+    "summary": "四人で撮ったセルフタイマー写真の窓には、カメラを構える五人目がいた。全員が『撮影者だ』と納得した後、次の写真では本体に五人、窓に六人目が写り始める。",
     "tags": [
       "写真",
       "旅行",

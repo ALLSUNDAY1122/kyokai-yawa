@@ -12,7 +12,7 @@ const readingMinutes = {
   'voice-memo': 8,
   'missing-floor': 8,
   'good-night': 8,
-  'window-reflection': 1
+  'window-reflection': 8
 };
 
 const progress = document.querySelector('.progress');
