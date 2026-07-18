@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
+Disallow: /yorugatari/
 
-Sitemap: https://allsunday1122.github.io/Kohei-Morita000.github.io/yorugatari/sitemap.xml
+Sitemap: https://allsunday1122.github.io/kyokai-yawa/sitemap.xml
