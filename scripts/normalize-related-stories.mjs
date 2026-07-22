@@ -80,8 +80,7 @@ const adjacent=(a,b)=>a.series===b.series&&Math.abs((seriesPosition.get(a.id)??0
 const overlap=(a,b)=>taxonomy[a.id].tags.filter(tag=>taxonomy[b.id].tags.includes(tag)).length;
 const pairScore=(a,b)=>{
   let score=overlap(a,b)*8;
-  if(a.series===b.series)score+=4;
-  else score+=2;
+  if(a.series===b.series)score+=4;else score+=2;
   if(Number(a.fear)===Number(b.fear))score+=2;
   if(Math.abs(minutes(a)-minutes(b))<=2)score+=2;
   if(adjacent(a,b))score-=7;
@@ -94,45 +93,29 @@ const stableTie=(source,target)=>{
   return hash;
 };
 
-for(const work of works){
-  const ranked=works.filter(candidate=>candidate.id!==work.id).sort((a,b)=>pairScore(work,b)-pairScore(work,a)||stableTie(work,a)-stableTie(work,b));
-  const selected=[];
-  const same=ranked.find(candidate=>candidate.series===work.series&&!adjacent(work,candidate));
-  if(same)selected.push(same);
-  const usedSeries=new Set(selected.map(item=>item.series));
-  for(const candidate of ranked){
-    if(selected.some(item=>item.id===candidate.id)||candidate.series===work.series||usedSeries.has(candidate.series))continue;
-    selected.push(candidate);
-    usedSeries.add(candidate.series);
-    if(selected.length===3)break;
-  }
-  for(const candidate of ranked){
-    if(selected.length===3)break;
-    if(!selected.some(item=>item.id===candidate.id))selected.push(candidate);
-  }
-  taxonomy[work.id].related=selected.slice(0,3).map(item=>item.id);
-}
-
-const inboundCounts=()=>{
-  const counts=Object.fromEntries(works.map(work=>[work.id,0]));
-  for(const entry of Object.values(taxonomy))for(const id of entry.related)counts[id]=(counts[id]||0)+1;
-  return counts;
+const inbound=Object.fromEntries(works.map(work=>[work.id,0]));
+const chooseBalanced=(source,candidates)=>{
+  const ranked=[...candidates].sort((a,b)=>{
+    const aAdjusted=pairScore(source,a)-(inbound[a.id]||0)*50;
+    const bAdjusted=pairScore(source,b)-(inbound[b.id]||0)*50;
+    return bAdjusted-aAdjusted||pairScore(source,b)-pairScore(source,a)||stableTie(source,a)-stableTie(source,b);
+  });
+  return ranked[0];
 };
-for(const target of works){
-  let inbound=inboundCounts();
-  if(inbound[target.id]>0)continue;
-  let best=null;
-  for(const source of works){
-    if(source.id===target.id||taxonomy[source.id].related.includes(target.id))continue;
-    for(let index=taxonomy[source.id].related.length-1;index>=0;index--){
-      const currentId=taxonomy[source.id].related[index];
-      if((inbound[currentId]||0)<=1)continue;
-      const current=works[positions.get(currentId)];
-      const gain=pairScore(source,target)-pairScore(source,current);
-      if(!best||gain>best.gain)best={source,index,gain};
-    }
-  }
-  if(best)taxonomy[best.source.id].related[best.index]=target.id;
+
+for(const work of works){
+  const sourceSeriesIndex=seriesOrder.indexOf(work.series);
+  const sameCandidates=works.filter(candidate=>candidate.id!==work.id&&candidate.series===work.series&&!adjacent(work,candidate));
+  const same=chooseBalanced(work,sameCandidates);
+  if(!same)throw new Error(`${work.id}: 同シリーズの関連候補がありません`);
+  const firstCrossSeries=seriesOrder[(sourceSeriesIndex+1)%seriesOrder.length];
+  const secondCrossSeries=seriesOrder[(sourceSeriesIndex+2)%seriesOrder.length];
+  const firstCross=chooseBalanced(work,works.filter(candidate=>candidate.series===firstCrossSeries));
+  const secondCross=chooseBalanced(work,works.filter(candidate=>candidate.series===secondCrossSeries));
+  const selected=[same,firstCross,secondCross];
+  if(selected.some(item=>!item)||new Set(selected.map(item=>item.id)).size!==3)throw new Error(`${work.id}: 関連作品を3話選定できません`);
+  taxonomy[work.id].related=selected.map(item=>item.id);
+  for(const item of selected)inbound[item.id]=(inbound[item.id]||0)+1;
 }
 
 const taxonomyPath=path.join(root,'data','story-taxonomy.json');
@@ -170,7 +153,6 @@ for(const work of works){
   if(html!==before)changed++;
 }
 
-const inbound=inboundCounts();
 const inboundValues=Object.values(inbound);
 const sameSeries=works.reduce((total,work)=>total+taxonomy[work.id].related.filter(id=>works[positions.get(id)]?.series===work.series).length,0);
 console.log(`# 題材タグ・関連作品の正規化\n\n- 公開作品: ${works.length}話\n- 題材タグ: ${works.length*4}件\n- 関連作品リンク: ${works.length*3}件\n- 同シリーズ関連: ${sameSeries}件\n- 別シリーズ関連: ${works.length*3-sameSeries}件\n- 被リンク最小: ${Math.min(...inboundValues)}件\n- 被リンク最大: ${Math.max(...inboundValues)}件\n- 更新ページ: ${changed}ページ\n`);
