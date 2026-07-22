@@ -34,6 +34,7 @@ class OfflineBrowserReporter{
       `- 実行対象: ${target}`,
       `- 実行環境: ${projects.join(' / ')||'なし'}`,
       '- 対象操作: Service Worker登録・事前保存・閲覧済み作品再読・未保存ページのオフライン案内・読書記録のオフライン表示・manifest/icon配信',
+      '- 通信遮断検証: Chromiumは実際のオフライン画面遷移、WebKitはPlaywright内部エラー回避のためService WorkerのCache Storage応答本文と依存資産を直接検証',
       '- テスト領域: 実行ごとに独立したブラウザー保存領域',
       `- テスト結果: ${fullResult.status}`,
       `- 成功: ${passed}`,
