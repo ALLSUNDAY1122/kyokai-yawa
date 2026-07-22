@@ -47,6 +47,7 @@ on:
       - 'scripts/audit-related-stories.mjs'
       - 'scripts/audit-story-overviews.mjs'
       - 'scripts/audit-work-cards.mjs'
+      - 'scripts/audit-static-home-rendering.mjs'
       - 'scripts/normalize-reading-times.mjs'
       - 'scripts/normalize-story-navigation.mjs'
       - 'scripts/normalize-fear-levels.mjs'
@@ -54,6 +55,7 @@ on:
       - 'scripts/normalize-public-assets.mjs'
       - 'scripts/normalize-shared-story-css.mjs'
       - 'scripts/normalize-discovery.mjs'
+      - 'scripts/normalize-static-home-rendering.mjs'
       - 'scripts/normalize-site-icons.mjs'
       - 'scripts/normalize-offline.mjs'
       - 'scripts/normalize-reader-tools.mjs'
@@ -132,6 +134,9 @@ jobs:
       - name: Generate search discovery metadata RSS social cards and comparable work cards
         run: node scripts/normalize-discovery.mjs
 
+      - name: Remove legacy homepage JavaScript rerendering
+        run: node scripts/normalize-static-home-rendering.mjs
+
       - name: Generate dedicated series pages and discovery links
         run: node scripts/normalize-series-pages.mjs
 
@@ -205,6 +210,11 @@ jobs:
         continue-on-error: true
         run: node scripts/audit-work-cards.mjs
 
+      - name: Audit static homepage rendering
+        id: static_render_audit
+        continue-on-error: true
+        run: node scripts/audit-static-home-rendering.mjs
+
       - name: Upload audit reports
         if: always()
         uses: actions/upload-artifact@v4
@@ -228,5 +238,5 @@ jobs:
           fi
 
       - name: Fail when audit errors exist
-        if: steps.content_audit.outcome == 'failure' || steps.length_audit.outcome == 'failure' || steps.navigation_audit.outcome == 'failure' || steps.fear_audit.outcome == 'failure' || steps.html_audit.outcome == 'failure' || steps.assets_audit.outcome == 'failure' || steps.discovery_audit.outcome == 'failure' || steps.icons_audit.outcome == 'failure' || steps.offline_audit.outcome == 'failure' || steps.reader_audit.outcome == 'failure' || steps.series_audit.outcome == 'failure' || steps.related_audit.outcome == 'failure' || steps.overview_audit.outcome == 'failure' || steps.cards_audit.outcome == 'failure'
+        if: steps.content_audit.outcome == 'failure' || steps.length_audit.outcome == 'failure' || steps.navigation_audit.outcome == 'failure' || steps.fear_audit.outcome == 'failure' || steps.html_audit.outcome == 'failure' || steps.assets_audit.outcome == 'failure' || steps.discovery_audit.outcome == 'failure' || steps.icons_audit.outcome == 'failure' || steps.offline_audit.outcome == 'failure' || steps.reader_audit.outcome == 'failure' || steps.series_audit.outcome == 'failure' || steps.related_audit.outcome == 'failure' || steps.overview_audit.outcome == 'failure' || steps.cards_audit.outcome == 'failure' || steps.static_render_audit.outcome == 'failure'
         run: exit 1
