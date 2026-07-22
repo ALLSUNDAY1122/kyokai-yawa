@@ -22,8 +22,8 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: live-site-audit-${{ github.ref }}
-  cancel-in-progress: true
+  group: kyokai-yawa-write-${{ github.ref }}
+  cancel-in-progress: false
 
 permissions:
   contents: write
