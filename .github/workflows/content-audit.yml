@@ -55,8 +55,8 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: kyokai-yawa-write-${{ github.ref }}
-  cancel-in-progress: false
+  group: content-audit-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: write
