@@ -7,6 +7,7 @@ on:
       - 'data/works.js'
       - 'sitemap.xml'
       - 'scripts/audit-stories.mjs'
+      - 'scripts/audit-length-categories.mjs'
       - 'scripts/normalize-reading-times.mjs'
       - '.github/workflows/content-audit.yml'
   workflow_dispatch:
@@ -26,35 +27,40 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Normalize reading-time metadata
+      - name: Normalize reading-time metadata and length categories
         run: node scripts/normalize-reading-times.mjs
 
       - name: Audit story metadata and cross-story repetition
-        id: audit
+        id: content_audit
         continue-on-error: true
         run: node scripts/audit-stories.mjs
 
-      - name: Upload audit report
+      - name: Audit story length categories
+        id: length_audit
+        continue-on-error: true
+        run: node scripts/audit-length-categories.mjs
+
+      - name: Upload audit reports
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: content-audit-report
-          path: reports/content-audit.md
+          name: content-audit-reports
+          path: reports/*.md
           if-no-files-found: error
 
-      - name: Commit normalized metadata and audit report
+      - name: Commit normalized metadata and audit reports
         if: always()
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add stories data/works.js sitemap.xml reports/content-audit.md
+          git add stories data/works.js sitemap.xml reports/*.md
           if git diff --cached --quiet; then
-            echo "Content metadata and audit report are unchanged."
+            echo "Content metadata and audit reports are unchanged."
           else
-            git commit -m "chore: normalize reading times and update audit report"
+            git commit -m "chore: normalize story metadata and update audit reports"
             git push
           fi
 
       - name: Fail when audit errors exist
-        if: steps.audit.outcome == 'failure'
+        if: steps.content_audit.outcome == 'failure' || steps.length_audit.outcome == 'failure'
         run: exit 1
