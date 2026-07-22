@@ -1,13 +1,15 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
+const PROJECT_NAMES=new Set(['chromium-desktop','webkit-mobile']);
+
 class ReadingBrowserReporter{
   constructor(){this.started=Date.now();this.results=new Map();}
   printsToStdio(){return false;}
   onTestEnd(test,result){
-    const titlePath=test.titlePath();
-    const project=titlePath[0]||'unknown';
-    const title=titlePath.slice(1).join(' › ')||test.title;
+    const titlePath=test.titlePath().filter(Boolean);
+    const project=titlePath.find(value=>PROJECT_NAMES.has(value))||test.parent?.project?.()?.name||'unknown';
+    const title=titlePath.filter(value=>value!==project).join(' › ')||test.title;
     const key=`${project}:${test.id}`;
     this.results.set(key,{
       project,
