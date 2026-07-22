@@ -6,6 +6,7 @@ on:
       - 'index.html'
       - 'stories/**'
       - 'series/**'
+      - 'service-worker.js'
       - 'data/works.js'
       - 'data/saved-stories.css'
       - 'data/saved-stories.js'
@@ -15,6 +16,7 @@ on:
       - 'data/home-personalization.js'
       - 'scripts/normalize-home-personalization.mjs'
       - 'scripts/normalize-saved-stories.mjs'
+      - 'scripts/normalize-saved-stories-offline.mjs'
       - 'scripts/audit-home-personalization.mjs'
       - 'scripts/audit-saved-stories.mjs'
       - '.github/workflows/saved-stories-audit.yml'
@@ -39,6 +41,8 @@ jobs:
         run: node scripts/normalize-home-personalization.mjs
       - name: Normalize save for later assets
         run: node scripts/normalize-saved-stories.mjs
+      - name: Normalize save for later offline assets
+        run: node scripts/normalize-saved-stories-offline.mjs
       - name: Audit personalized homepage
         id: personalization
         continue-on-error: true
@@ -52,7 +56,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add index.html stories series reports/home-personalization-audit.md reports/saved-stories-audit.md
+          git add index.html stories series service-worker.js reports/home-personalization-audit.md reports/saved-stories-audit.md
           if git diff --cached --quiet; then
             echo "Saved stories pages and reports are unchanged."
           else
