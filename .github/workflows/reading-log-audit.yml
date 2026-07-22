@@ -1,0 +1,59 @@
+name: Reading Log Audit
+
+on:
+  push:
+    paths:
+      - 'index.html'
+      - 'stories/**'
+      - 'series/**'
+      - 'service-worker.js'
+      - 'data/works.js'
+      - 'data/reading-status.js'
+      - 'data/saved-stories.js'
+      - 'data/reading-log.css'
+      - 'data/reading-log.js'
+      - 'scripts/normalize-reading-log.mjs'
+      - 'scripts/normalize-reading-log-offline.mjs'
+      - 'scripts/audit-reading-log.mjs'
+      - '.github/workflows/reading-log-audit.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: reading-log-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  generate-and-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Generate reading log page and navigation
+        run: node scripts/normalize-reading-log.mjs
+      - name: Normalize reading log offline assets
+        run: node scripts/normalize-reading-log-offline.mjs
+      - name: Audit reading log page
+        id: audit
+        continue-on-error: true
+        run: node scripts/audit-reading-log.mjs
+      - name: Commit generated page and report
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add reading-log.html index.html stories series service-worker.js reports/reading-log-audit.md
+          if git diff --cached --quiet; then
+            echo "Reading log page and report are unchanged."
+          else
+            git commit -m "chore: publish device-local reading log"
+            git pull --rebase origin main
+            git push
+          fi
+      - name: Fail when audit errors exist
+        if: steps.audit.outcome == 'failure'
+        run: exit 1
