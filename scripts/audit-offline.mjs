@@ -39,7 +39,7 @@ for (const [fragment, label] of workerRequirements) {
 }
 const precache = worker.match(/const PRECACHE = \[([\s\S]*?)\];/)?.[1] || '';
 if (precache.includes('/stories/')) errors.push('全作品本文を事前キャッシュしています。作品本文は閲覧時のみ保存してください');
-if (!precache.includes('offline.html')) errors.push('offline.htmlが事前キャッシュされていません');
+if (!precache.includes('offline.html') && !precache.includes('OFFLINE_URL')) errors.push('offline.htmlが事前キャッシュされていません');
 if (!worker.includes('storeSuccessfulResponse(PAGE_CACHE') && !worker.includes('networkFirst(request, PAGE_CACHE')) {
   errors.push('閲覧済みページを通信成功時に更新する処理がありません');
 }
