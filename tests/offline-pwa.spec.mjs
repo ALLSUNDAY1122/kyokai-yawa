@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 
 const SCOPE_PATH='/kyokai-yawa/';
 const VISITED_STORY='stories/mkb-001-taikin-kiroku-2514.html';
-const UNVISITED_STORY='stories/krs-012-kurokami-sama-no-yado.html';
+const UNVISITED_STORY='stories/krs-012-suijinsai-no-kessekisha.html';
 
 async function ensureServiceWorker(page){
   await page.goto(`?pwa-audit=${Date.now()}`,{waitUntil:'load'});
