@@ -1,6 +1,13 @@
 import { defineConfig } from '@playwright/test';
 
-const baseURL='http://127.0.0.1:4173/kyokai-yawa/';
+const publicBaseURL=process.env.PLAYWRIGHT_BASE_URL?.trim();
+const baseURL=publicBaseURL||'http://127.0.0.1:4173/kyokai-yawa/';
+const webServer=publicBaseURL?undefined:{
+  command:'node scripts/serve-playwright.mjs',
+  url:baseURL,
+  reuseExistingServer:!process.env.CI,
+  timeout:120_000,
+};
 
 export default defineConfig({
   testDir:'./tests',
@@ -23,12 +30,7 @@ export default defineConfig({
     screenshot:'only-on-failure',
     video:'retain-on-failure',
   },
-  webServer:{
-    command:'node scripts/serve-playwright.mjs',
-    url:baseURL,
-    reuseExistingServer:!process.env.CI,
-    timeout:120_000,
-  },
+  webServer,
   projects:[
     {
       name:'chromium-desktop',
