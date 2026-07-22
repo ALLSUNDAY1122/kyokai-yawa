@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>読書記録｜境界夜話</title>
-<meta name="description" content="この端末に保存された境界夜話の読了、途中位置、あとで読むを一覧で確認します。">
+<meta name="description" content="この端末に保存された境界夜話の読了、途中位置、あとで読むを一覧で確認し、JSONでバックアップできます。">
 <meta name="robots" content="noindex,follow"><meta name="theme-color" content="#090b10">
 <link rel="manifest" href="/kyokai-yawa/manifest.webmanifest"><link rel="icon" type="image/svg+xml" href="/kyokai-yawa/assets/app-icon.svg"><link rel="icon" type="image/png" sizes="192x192" href="/kyokai-yawa/assets/app-icon-192.png"><link rel="apple-touch-icon" sizes="180x180" href="/kyokai-yawa/assets/apple-touch-icon.png">
 <meta name="application-name" content="境界夜話"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="境界夜話">
@@ -16,6 +16,18 @@
 <main id="main">
 <section class="hero" aria-labelledby="reading-log-title"><div><p class="eyebrow">YOUR READING LOG</p><h1 id="reading-log-title">読書記録</h1><p class="lead">読了済み、途中まで読んだ作品、あとで読むを一か所で確認します。各作品の状態はこの端末のブラウザー内だけに保存されます。</p></div><p class="local-note">このページの内容は端末ごとに異なります。アカウント同期や外部送信は行いません。ブラウザーの保存データを削除すると記録も消去されます。</p></section>
 <section class="summary-grid" aria-label="読書状況"><article class="summary-card"><small>読了済み</small><strong data-count-read>0話</strong></article><article class="summary-card"><small>未読</small><strong data-count-unread>48話</strong></article><article class="summary-card"><small>あとで読む</small><strong data-count-saved>0話</strong></article><article class="summary-card"><small>途中まで</small><strong data-count-progress>0話</strong></article><div class="summary-progress" aria-hidden="true"><span data-summary-bar style="transform:scaleX(0)"></span></div></section>
+<section class="backup-panel" data-reading-backup aria-labelledby="backup-title">
+  <div class="backup-panel__head"><div><p class="eyebrow">LOCAL BACKUP</p><h2 id="backup-title">読書記録をバックアップ</h2></div><p>読了、閲覧履歴、あとで読む、途中位置、文字サイズをJSONファイルへ保存し、別の端末やブラウザーで復元できます。</p></div>
+  <div class="backup-actions"><button type="button" data-backup-export>バックアップJSONを保存</button><button type="button" data-backup-share hidden>バックアップを共有</button><label class="backup-file"><span>JSONから復元</span><input type="file" data-backup-file accept=".json,application/json"></label></div>
+  <p class="backup-privacy">ファイルには作品ID、閲覧・読了日時、途中位置などが含まれます。作品本文、氏名、メールアドレス、アカウント情報は含まれません。</p>
+  <div class="backup-preview" data-backup-preview hidden>
+    <h3>復元する内容</h3>
+    <dl class="backup-preview__summary"><div><dt>書き出し日時</dt><dd data-preview-exported></dd></div><div><dt>読了済み</dt><dd data-preview-read></dd></div><div><dt>あとで読む</dt><dd data-preview-saved></dd></div><div><dt>途中位置</dt><dd data-preview-progress></dd></div><div><dt>閲覧履歴</dt><dd data-preview-history></dd></div><div><dt>文字サイズ</dt><dd data-preview-size></dd></div></dl>
+    <fieldset class="backup-modes"><legend>復元方法</legend><label><input type="radio" name="backup-mode" value="merge" checked><span><strong>現在の記録へ追加</strong><small>読了と保存を統合し、新しい履歴と進んでいる途中位置を残します。</small></span></label><label><input type="radio" name="backup-mode" value="replace"><span><strong>バックアップ内容で置換</strong><small>この端末の現在の読書記録を削除して、バックアップの状態へ戻します。</small></span></label></fieldset>
+    <div class="backup-confirm-actions"><button type="button" data-backup-confirm disabled>この内容を復元</button><button type="button" data-backup-cancel>選択を取り消す</button></div>
+  </div>
+  <p class="backup-message" data-backup-message aria-live="polite"></p>
+</section>
 <section aria-labelledby="log-list-title"><h2 id="log-list-title" class="eyebrow">48 STORIES</h2><div class="log-tools" aria-label="読書記録の検索と絞り込み"><input type="search" data-log-query aria-label="作品検索" placeholder="作品名・あらすじ・IDで検索"><select data-log-series aria-label="シリーズで絞り込み"><option value="">すべてのシリーズ</option></select><select data-log-state aria-label="状態で絞り込み"><option value="">すべての状態</option><option value="progress">途中まで</option><option value="saved">あとで読む</option><option value="unread">未読</option><option value="read">読了済み</option></select><select data-log-sort aria-label="並べ替え"><option value="recent">最近更新した順</option><option value="public">公開順</option><option value="short">短い順</option><option value="fear">恐怖度が高い順</option></select><button type="button" data-log-reset>条件をリセット</button></div><p class="log-result" data-log-result aria-live="polite">48話を表示中</p><div class="log-grid" data-reading-log-grid></div><p class="log-empty" data-log-empty hidden>条件に合う作品はありません。</p></section>
 </main>
 <footer>© 2026 境界夜話</footer>
@@ -23,6 +35,7 @@
 <script src="/kyokai-yawa/data/reading-status.js"></script>
 <script src="/kyokai-yawa/data/saved-stories.js"></script>
 <script src="/kyokai-yawa/data/reading-log.js"></script>
+<script src="/kyokai-yawa/data/reading-backup.js"></script>
 <script src="/kyokai-yawa/data/sw-register.js" defer></script>
 </body>
 </html>
