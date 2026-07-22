@@ -1,0 +1,60 @@
+name: Reading Status
+
+on:
+  push:
+    paths:
+      - 'index.html'
+      - 'stories/**'
+      - 'series/**'
+      - 'data/works.js'
+      - 'data/reading-status.css'
+      - 'data/reading-status.js'
+      - 'data/reader-tools.js'
+      - 'data/archive-tools.js'
+      - 'data/series-archive-tools.js'
+      - 'scripts/normalize-reading-status.mjs'
+      - 'scripts/audit-reading-status.mjs'
+      - '.github/workflows/reading-status-audit.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: reading-status-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  normalize-and-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Normalize reading status assets
+        run: node scripts/normalize-reading-status.mjs
+      - name: Audit reading status management
+        id: reading_status
+        continue-on-error: true
+        run: node scripts/audit-reading-status.mjs
+      - name: Audit existing reader experience
+        id: reader
+        continue-on-error: true
+        run: node scripts/audit-reader-experience.mjs
+      - name: Commit normalized pages and reports
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html series stories reports/reading-status-audit.md reports/reader-experience-audit.md
+          if git diff --cached --quiet; then
+            echo "Reading status pages and reports are unchanged."
+          else
+            git commit -m "chore: publish device-local reading status"
+            git pull --rebase origin main
+            git push
+          fi
+      - name: Fail when audit errors exist
+        if: steps.reading_status.outcome == 'failure' || steps.reader.outcome == 'failure'
+        run: exit 1
