@@ -35,8 +35,7 @@
   const currentStoryId=()=>document.body.dataset.storyId||document.querySelector('.eyebrow')?.textContent.match(/(?:MKB|KRS|SKK)-\d{3}|KKS-S1E\d{2}/)?.[0]||'';
   const getId=element=>element?.dataset?.workId||element?.dataset?.storyId||element?.dataset?.relatedId||element?.dataset?.personalStoryId||'';
   const badgeFor=card=>{
-    let badge=card.querySelector('[data-saved-badge]');
-    if(badge)return badge;
+    let badge=card.querySelector('[data-saved-badge]');if(badge)return badge;
     badge=document.createElement('span');badge.className='saved-story-badge';badge.dataset.savedBadge='';badge.textContent='あとで読む';
     if(card.classList.contains('work-card'))(card.querySelector('.work-card__head')||card).appendChild(badge);
     else if(card.classList.contains('story-card'))(card.querySelector('.story-card__head')||card).appendChild(badge);
@@ -54,15 +53,13 @@
   const ensureStoryButton=()=>{
     const id=currentStoryId();if(!id||document.querySelector('[data-toggle-saved]'))return;
     const actions=document.querySelector('.reading-completion-panel__actions')||document.querySelector('.story-overview__footer');if(!actions)return;
-    const button=document.createElement('button');button.type='button';button.className='save-story-button';button.dataset.toggleSaved='';button.addEventListener('click',()=>api.toggle(id));
-    actions.prepend(button);
+    const button=document.createElement('button');button.type='button';button.className='save-story-button';button.dataset.toggleSaved='';button.addEventListener('click',()=>api.toggle(id));actions.prepend(button);
   };
-  const updateStoryButton=()=>{
-    const id=currentStoryId();const button=document.querySelector('[data-toggle-saved]');if(!id||!button)return;const saved=api.isSaved(id);button.textContent=saved?'あとで読むから外す':'あとで読むに保存';button.setAttribute('aria-pressed',String(saved));button.setAttribute('aria-label',saved?'この作品をあとで読むから外す':'この作品をあとで読むに保存する');
-  };
+  const updateStoryButton=()=>{const id=currentStoryId();const button=document.querySelector('[data-toggle-saved]');if(!id||!button)return;const saved=api.isSaved(id);button.textContent=saved?'あとで読むから外す':'あとで読むに保存';button.setAttribute('aria-pressed',String(saved));button.setAttribute('aria-label',saved?'この作品をあとで読むから外す':'この作品をあとで読むに保存する');};
   const refresh=()=>{ensureStoryButton();decorateCards();updateStoryButton();};
   document.addEventListener('kyokai-saved-stories-change',refresh);
   document.addEventListener('kyokai-reading-status-change',refresh);
+  document.addEventListener('kyokai-personal-library-rendered',decorateCards);
   addEventListener('storage',event=>{if(event.key===STORAGE_KEY)refresh();});
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',refresh,{once:true});else refresh();
 })();
