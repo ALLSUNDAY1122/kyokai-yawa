@@ -5,7 +5,8 @@
 - 追加実行: 公開読書監査成功後・関連ファイル変更時・手動
 - ブラウザー: Chromium desktop / WebKit mobile
 - Service Worker: 実際に許可して登録・制御・Cache Storageを検証
-- 通信遮断: Playwright browser contextをofflineへ切り替えて検証
+- Chromium通信遮断: Playwright browser contextをofflineへ切り替えて画面遷移を検証
+- WebKit通信遮断相当: Playwright内部エラー回避のためService WorkerのCache Storage応答本文と依存資産を検証
 - 対象: 閲覧済み作品・未保存作品・読書記録・manifest・icon
 - 再試行: 最大1回
 - 実行上限: 20分
