@@ -1,0 +1,71 @@
+name: Notify IndexNow
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'index.html'
+      - 'stories/**'
+      - 'data/works.js'
+      - 'sitemap.xml'
+      - 'fed96e1bf41cc21699d874b7735427b8.txt'
+      - 'scripts/submit-indexnow.mjs'
+      - '.github/workflows/indexnow.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: indexnow-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  submit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Wait for published verification key
+        shell: bash
+        run: |
+          key='fed96e1bf41cc21699d874b7735427b8'
+          url="https://allsunday1122.github.io/kyokai-yawa/${key}.txt"
+          for attempt in {1..20}; do
+            body="$(curl --fail --silent --show-error --location "$url" || true)"
+            if [ "$(printf '%s' "$body" | tr -d '\r\n')" = "$key" ]; then
+              echo "Published IndexNow key verified."
+              exit 0
+            fi
+            echo "Key not published yet (attempt ${attempt}/20)."
+            sleep 15
+          done
+          echo "Published IndexNow key could not be verified."
+          exit 1
+
+      - name: Submit public URLs to IndexNow
+        run: node scripts/submit-indexnow.mjs
+
+      - name: Commit submission report
+        if: always()
+        shell: bash
+        run: |
+          if [ ! -f reports/indexnow-submission.md ]; then
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add reports/indexnow-submission.md
+          if git diff --cached --quiet; then
+            echo "IndexNow report is unchanged."
+            exit 0
+          fi
+          git commit -m "chore: record IndexNow submission"
+          git pull --rebase origin main
+          git push
