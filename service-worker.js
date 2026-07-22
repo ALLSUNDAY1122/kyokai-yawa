@@ -1,4 +1,4 @@
-const VERSION = 'kyokai-yawa-v3';
+const VERSION = 'kyokai-yawa-v4';
 const STATIC_CACHE = `${VERSION}-static`;
 const PAGE_CACHE = `${VERSION}-pages`;
 const ASSET_CACHE = `${VERSION}-assets`;
@@ -16,6 +16,7 @@ const PRECACHE = [
   `${SCOPE}data/archive-tools.js`,
   `${SCOPE}data/entry-guide.css`,
   `${SCOPE}data/reading-paths.css`,
+  `${SCOPE}data/work-cards.css`,
   `${SCOPE}data/series-links.js`,
   `${SCOPE}data/story-overview.css`,
   `${SCOPE}data/related-stories.css`,
