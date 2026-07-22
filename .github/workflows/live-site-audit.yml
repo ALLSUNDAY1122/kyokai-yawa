@@ -27,6 +27,7 @@ permissions:
 jobs:
   audit-production:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -70,5 +71,6 @@ jobs:
             echo "Production audit report is unchanged."
           else
             git commit -m "chore: record production live site audit"
+            git pull --rebase origin main
             git push
           fi
