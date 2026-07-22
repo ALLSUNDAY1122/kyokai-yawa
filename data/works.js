@@ -6,7 +6,7 @@ window.KYOKAI_WORKS=[
 {id:'MKB-005',series:'真壁夜話',file:'mkb-005-shuden-go-no-wasuremono-center.html',title:'終電後の忘れ物センター',desc:'翌朝まだ紛失していない品物の拾得票が、返却を成立させるための紛失を後から発生させる。',length:'短編',mins:'約6分',fear:'3'},
 {id:'MKB-006',series:'真壁夜話',file:'mkb-006-seiso-zumi-no-heya.html',title:'清掃済みの部屋',desc:'清掃端末の備品数が現実を上書きし、閉鎖されたホテル507号室を同じ番号の自宅へ移していく。',length:'短編',mins:'約6分',fear:'3'},
 {id:'MKB-007',series:'真壁夜話',file:'mkb-007-onsei-annai-wa-nido-magaru.html',title:'音声案内は二度曲がる',desc:'同じ青柱42を二度右折するよう案内され、存在しない中間区画の経路を完了するまで出口処理が終わらない。',length:'短編',mins:'約6分',fear:'3'},
-{id:'MKB-008',series:'真壁夜話',file:'mkb-008-mujin-reji-no-miseisansha.html',title:'無人レジの未精算者',desc:'空の無人レジに残る未精算取引が、語り手の買い物と自宅を存在しない店舗の在庫へ編入していく。',length:'短編',mins:'約5分',fear:'3'},
+{id:'MKB-008',series:'真壁夜話',file:'mkb-008-mujin-reji-no-miseisansha.html',title:'無人レジの未精算者',desc:'空の無人レジに残る未精算取引が、語り手の買い物と自宅を存在しない店舗の在庫へ編入していく。',length:'短編',mins:'約6分',fear:'3'},
 {id:'MKB-009',series:'真壁夜話',file:'mkb-009-yoyakusha-mei-wa-kuran.html',title:'予約者名は空欄',desc:'予約者名だけが空欄の会議室予約が、座席と飲料に合わせて無関係な六人を統合し、受付担当者を主催者へ確定する。',length:'短編',mins:'約6分',fear:'4'},
 {id:'MKB-010',series:'真壁夜話',file:'mkb-010-kidoku-no-junban.html',title:'既読の順番',desc:'未送信の業務メッセージに付く既読順が、承認・確認・実行の履歴と参加者の記憶を過去へ遡って成立させる。',length:'短編',mins:'約6分',fear:'3'},
 {id:'MKB-011',series:'真壁夜話',file:'mkb-011-kanshi-eizo-no-osoban.html',title:'監視映像の遅番',desc:'十四分遅れる監視映像と現在の扉制御を点検モードで切り分け、停止・復旧時刻を同秒に合わせて未処理差分をゼロにする。',length:'短編',mins:'約7分',fear:'4'},
