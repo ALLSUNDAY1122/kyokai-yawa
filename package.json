@@ -1,0 +1,14 @@
+{
+  "name": "kyokai-yawa",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test:e2e": "playwright test",
+    "test:e2e:chromium": "playwright test --project=chromium-desktop",
+    "test:e2e:mobile": "playwright test --project=webkit-mobile"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.61.1"
+  }
+}
