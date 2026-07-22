@@ -1,0 +1,36 @@
+name: Content Audit
+
+on:
+  push:
+    paths:
+      - 'stories/**'
+      - 'data/works.js'
+      - 'scripts/audit-stories.mjs'
+      - '.github/workflows/content-audit.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Audit story metadata and reading times
+        run: node scripts/audit-stories.mjs
+
+      - name: Upload audit report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: content-audit-report
+          path: reports/content-audit.md
+          if-no-files-found: warn
