@@ -1,0 +1,60 @@
+name: Reading Paths Audit
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'index.html'
+      - 'data/works.js'
+      - 'data/archive-tools.js'
+      - 'data/reading-paths.css'
+      - 'scripts/normalize-reading-paths.mjs'
+      - 'scripts/audit-reading-paths.mjs'
+      - '.github/workflows/reading-paths-audit.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: reading-paths-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  normalize-and-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Generate reading path section
+        run: node scripts/normalize-reading-paths.mjs
+
+      - name: Audit reading path filters and links
+        id: reading_paths_audit
+        continue-on-error: true
+        run: node scripts/audit-reading-paths.mjs
+
+      - name: Commit generated section and report
+        if: always()
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html reports/reading-paths-audit.md
+          if git diff --cached --quiet; then
+            echo "Reading paths and report are unchanged."
+            exit 0
+          fi
+          git commit -m "chore: publish reading path discovery"
+          git pull --rebase origin main
+          git push
+
+      - name: Fail when reading path audit errors exist
+        if: steps.reading_paths_audit.outcome == 'failure'
+        run: exit 1
