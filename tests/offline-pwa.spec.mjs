@@ -7,18 +7,11 @@ const UNVISITED_STORY='stories/krs-012-kurokami-sama-no-yado.html';
 async function ensureServiceWorker(page){
   await page.goto(`?pwa-audit=${Date.now()}`,{waitUntil:'load'});
   await expect.poll(()=>page.evaluate(()=>'serviceWorker' in navigator),{timeout:10_000}).toBe(true);
-  const scope=await page.evaluate(async()=>{
-    const registration=await navigator.serviceWorker.ready;
-    if(!navigator.serviceWorker.controller){
-      await new Promise((resolve,reject)=>{
-        const timer=setTimeout(()=>reject(new Error('Service Workerがページを制御しませんでした。')),15_000);
-        navigator.serviceWorker.addEventListener('controllerchange',()=>{clearTimeout(timer);resolve();},{once:true});
-        registration.active?.postMessage({type:'SKIP_WAITING'});
-      });
-    }
-    return registration.scope;
-  });
-  await expect.poll(()=>page.evaluate(()=>Boolean(navigator.serviceWorker.controller)),{timeout:12_000}).toBe(true);
+  const scope=await page.evaluate(async()=>(await navigator.serviceWorker.ready).scope);
+  if(!await page.evaluate(()=>Boolean(navigator.serviceWorker.controller))){
+    await page.reload({waitUntil:'load'});
+  }
+  await expect.poll(()=>page.evaluate(()=>Boolean(navigator.serviceWorker.controller)),{timeout:15_000}).toBe(true);
   expect(new URL(scope).pathname).toBe(SCOPE_PATH);
 }
 
@@ -49,14 +42,17 @@ test('Service Workerが登録され、PWA共通資産を事前保存する',asyn
 });
 
 test('manifestとアプリアイコンが公開されている',async({page})=>{
-  const manifestResponse=await page.request.get('manifest.webmanifest');
+  await page.goto('',{waitUntil:'domcontentloaded'});
+  const manifestUrl=new URL('manifest.webmanifest',page.url()).href;
+  const iconUrl=new URL('assets/app-icon-192.png',page.url()).href;
+  const manifestResponse=await page.request.get(manifestUrl);
   expect(manifestResponse.ok()).toBe(true);
   const manifest=await manifestResponse.json();
   expect(manifest.name).toContain('境界夜話');
   expect(manifest.start_url).toBe('/kyokai-yawa/');
   expect(manifest.display).toMatch(/standalone|minimal-ui/);
   expect(Array.isArray(manifest.icons)&&manifest.icons.length>=2).toBe(true);
-  const iconResponse=await page.request.get('assets/app-icon-192.png');
+  const iconResponse=await page.request.get(iconUrl);
   expect(iconResponse.ok()).toBe(true);
   expect(iconResponse.headers()['content-type']||'').toContain('image/png');
 });
