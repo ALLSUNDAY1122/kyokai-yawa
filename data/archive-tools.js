@@ -47,7 +47,7 @@
 
     const search=document.createElement('input');
     search.type='search';
-    search.placeholder='作品名・あらすじ・IDで検索';
+    search.placeholder='作品名・題材・あらすじ・IDで検索';
     search.setAttribute('aria-label','作品検索');
 
     const series=document.createElement('select');
@@ -110,7 +110,8 @@
     tools.append(search,series,mode,sort,actions,result);
     grid.parentNode.insertBefore(tools,grid);
 
-    const entries=[...grid.querySelectorAll('.work-card')].map((card,index)=>({card,work:works[index],index}));
+    const workById=new Map(works.map(work=>[work.id,work]));
+    const entries=[...grid.querySelectorAll('.work-card')].map((card,index)=>({card,work:workById.get(card.dataset.workId)||works[index],index})).filter(entry=>entry.work);
     let visibleEntries=[...entries];
     const normalize=value=>String(value||'').toLocaleLowerCase('ja');
     const minutes=work=>Number.parseInt(String(work.mins).match(/\d+/)?.[0]||'0',10);
@@ -148,8 +149,8 @@
     const apply=()=>{
       const query=normalize(search.value).trim();
       const selectedSeries=series.value;
-      visibleEntries=entries.filter(({work})=>{
-        const text=normalize(`${work.id} ${work.title} ${work.desc} ${work.series}`);
+      visibleEntries=entries.filter(({work,card})=>{
+        const text=normalize(`${work.id} ${work.title} ${work.desc} ${work.series} ${card.dataset.search||''} ${card.dataset.tags||''} ${card.dataset.format||''}`);
         return (!selectedSeries||work.series===selectedSeries)&&matchesMode(work,mode.value)&&(!query||text.includes(query));
       });
 
