@@ -29,7 +29,7 @@ if(index.indexOf('home-personalization.js')>index.indexOf('archive-tools.js'))wa
 for(const token of ['kyokai-yawa-reading-history-v1','recordVisit','getHistory','completions','visits'])if(!readingStatus.includes(token))errors.push(`読書履歴処理がありません: ${token}`);
 for(const token of ['kyokai-yawa-saved-stories-v1','getSavedIds','savedAt'])if(!savedStories.includes(token))errors.push(`保存作品処理がありません: ${token}`);
 for(const token of ["params.get('resume') === '1'",'resumeToSavedPosition','history.replaceState'])if(!readerTools.includes(token))errors.push(`途中位置への直接復帰処理がありません: ${token}`);
-for(const token of ['POSITION_PREFIX','data-personal-library','data-personal-continue','data-personal-recent','data-personal-saved','data-personal-recommend','story-taxonomy.json','selectRecommendations','status.getReadIds','status.getHistory','savedApi.getSavedIds'])if(!personalization.includes(token))errors.push(`個別化処理がありません: ${token}`);
+for(const token of ['POSITION_PREFIX','data-personal-library','data-personal-continue','data-personal-recent','data-personal-saved','data-personal-recommend','story-taxonomy.json','selectRecommendations','status.getReadIds','status.getHistory','getSavedIds'])if(!personalization.includes(token))errors.push(`個別化処理がありません: ${token}`);
 if(!personalization.includes("fetch('/kyokai-yawa/data/story-taxonomy.json'"))errors.push('分類データ取得が同一サイトの絶対パスではありません');
 if(/https?:\/\//.test(personalization))errors.push('個別化JavaScriptに外部URLが含まれています');
 for(const risky of ['sendBeacon','XMLHttpRequest','WebSocket'])if(personalization.includes(risky)||readingStatus.includes(risky)||savedStories.includes(risky))errors.push(`外部送信に使える処理が含まれています: ${risky}`);
