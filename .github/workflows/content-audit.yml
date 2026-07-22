@@ -8,8 +8,13 @@ on:
       - '404.html'
       - 'robots.txt'
       - 'feed.xml'
+      - 'manifest.webmanifest'
       - 'assets/social-card.svg'
       - 'assets/social-card.png'
+      - 'assets/app-icon.svg'
+      - 'assets/app-icon-192.png'
+      - 'assets/app-icon-512.png'
+      - 'assets/apple-touch-icon.png'
       - 'stories/**'
       - 'data/works.js'
       - 'data/story-nav.js'
@@ -23,6 +28,7 @@ on:
       - 'scripts/audit-html-basics.mjs'
       - 'scripts/audit-public-assets.mjs'
       - 'scripts/audit-discovery.mjs'
+      - 'scripts/audit-site-icons.mjs'
       - 'scripts/normalize-reading-times.mjs'
       - 'scripts/normalize-story-navigation.mjs'
       - 'scripts/normalize-fear-levels.mjs'
@@ -30,6 +36,7 @@ on:
       - 'scripts/normalize-public-assets.mjs'
       - 'scripts/normalize-shared-story-css.mjs'
       - 'scripts/normalize-discovery.mjs'
+      - 'scripts/normalize-site-icons.mjs'
       - '.github/workflows/content-audit.yml'
   workflow_dispatch:
 
@@ -61,6 +68,21 @@ jobs:
           else
             echo "Social sharing card is current."
           fi
+
+      - name: Render favicon and home screen icons
+        run: |
+          if [ ! -f assets/app-icon-192.png ] || [ ! -f assets/app-icon-512.png ] || [ ! -f assets/apple-touch-icon.png ] || [ assets/app-icon.svg -nt assets/app-icon-192.png ] || [ assets/app-icon.svg -nt assets/app-icon-512.png ] || [ assets/app-icon.svg -nt assets/apple-touch-icon.png ]; then
+            sudo apt-get update
+            sudo apt-get install -y librsvg2-bin
+            rsvg-convert -w 192 -h 192 assets/app-icon.svg -o assets/app-icon-192.png
+            rsvg-convert -w 512 -h 512 assets/app-icon.svg -o assets/app-icon-512.png
+            rsvg-convert -w 180 -h 180 assets/app-icon.svg -o assets/apple-touch-icon.png
+          else
+            echo "Site icons are current."
+          fi
+
+      - name: Normalize site icon and manifest metadata
+        run: node scripts/normalize-site-icons.mjs
 
       - name: Normalize public asset references
         run: node scripts/normalize-public-assets.mjs
@@ -118,6 +140,11 @@ jobs:
         continue-on-error: true
         run: node scripts/audit-discovery.mjs
 
+      - name: Audit favicon home screen icons and web app manifest
+        id: icons_audit
+        continue-on-error: true
+        run: node scripts/audit-site-icons.mjs
+
       - name: Upload audit reports
         if: always()
         uses: actions/upload-artifact@v4
@@ -131,7 +158,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A .nojekyll index.html 404.html robots.txt feed.xml assets stories data sitemap.xml reports/*.md
+          git add -A .nojekyll index.html 404.html robots.txt feed.xml manifest.webmanifest assets stories data sitemap.xml reports/*.md
           if git diff --cached --quiet; then
             echo "Content metadata and audit reports are unchanged."
           else
@@ -140,5 +167,5 @@ jobs:
           fi
 
       - name: Fail when audit errors exist
-        if: steps.content_audit.outcome == 'failure' || steps.length_audit.outcome == 'failure' || steps.navigation_audit.outcome == 'failure' || steps.fear_audit.outcome == 'failure' || steps.html_audit.outcome == 'failure' || steps.assets_audit.outcome == 'failure' || steps.discovery_audit.outcome == 'failure'
+        if: steps.content_audit.outcome == 'failure' || steps.length_audit.outcome == 'failure' || steps.navigation_audit.outcome == 'failure' || steps.fear_audit.outcome == 'failure' || steps.html_audit.outcome == 'failure' || steps.assets_audit.outcome == 'failure' || steps.discovery_audit.outcome == 'failure' || steps.icons_audit.outcome == 'failure'
         run: exit 1
