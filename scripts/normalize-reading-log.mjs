@@ -1,0 +1,60 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import vm from 'node:vm';
+
+const root=process.cwd();
+const context={window:{}};
+const worksPath=path.join(root,'data','works.js');
+vm.runInNewContext(fs.readFileSync(worksPath,'utf8'),context,{filename:worksPath});
+const works=context.window.KYOKAI_WORKS||[];
+if(works.length!==48)throw new Error(`作品データが48件ではありません（${works.length}件）`);
+const base='https://allsunday1122.github.io/kyokai-yawa/';
+const page=`<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>読書記録｜境界夜話</title>
+<meta name="description" content="この端末に保存された境界夜話の読了、途中位置、あとで読むを一覧で確認します。">
+<meta name="robots" content="noindex,follow"><meta name="theme-color" content="#090b10">
+<link rel="manifest" href="/kyokai-yawa/manifest.webmanifest"><link rel="icon" type="image/svg+xml" href="/kyokai-yawa/assets/app-icon.svg"><link rel="icon" type="image/png" sizes="192x192" href="/kyokai-yawa/assets/app-icon-192.png"><link rel="apple-touch-icon" sizes="180x180" href="/kyokai-yawa/assets/apple-touch-icon.png">
+<meta name="application-name" content="境界夜話"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="境界夜話">
+<link rel="canonical" href="${base}reading-log.html">
+<link rel="stylesheet" href="/kyokai-yawa/data/reading-log.css">
+</head>
+<body>
+<a class="skip" href="#main">本文へ移動</a>
+<header class="site-header"><nav class="nav" aria-label="主要メニュー"><a class="brand" href="/kyokai-yawa/"><strong>境界夜話</strong><span>怪談アーカイブ</span></a><div class="nav-links"><a href="/kyokai-yawa/">トップ</a><a href="/kyokai-yawa/#works">作品</a><a href="/kyokai-yawa/#series">シリーズ</a><a aria-current="page" href="/kyokai-yawa/reading-log.html">読書記録</a></div></nav></header>
+<main id="main">
+<section class="hero" aria-labelledby="reading-log-title"><div><p class="eyebrow">YOUR READING LOG</p><h1 id="reading-log-title">読書記録</h1><p class="lead">読了済み、途中まで読んだ作品、あとで読むを一か所で確認します。各作品の状態はこの端末のブラウザー内だけに保存されます。</p></div><p class="local-note">このページの内容は端末ごとに異なります。アカウント同期や外部送信は行いません。ブラウザーの保存データを削除すると記録も消去されます。</p></section>
+<section class="summary-grid" aria-label="読書状況"><article class="summary-card"><small>読了済み</small><strong data-count-read>0話</strong></article><article class="summary-card"><small>未読</small><strong data-count-unread>48話</strong></article><article class="summary-card"><small>あとで読む</small><strong data-count-saved>0話</strong></article><article class="summary-card"><small>途中まで</small><strong data-count-progress>0話</strong></article><div class="summary-progress" aria-hidden="true"><span data-summary-bar style="transform:scaleX(0)"></span></div></section>
+<section aria-labelledby="log-list-title"><h2 id="log-list-title" class="eyebrow">48 STORIES</h2><div class="log-tools" aria-label="読書記録の検索と絞り込み"><input type="search" data-log-query aria-label="作品検索" placeholder="作品名・あらすじ・IDで検索"><select data-log-series aria-label="シリーズで絞り込み"><option value="">すべてのシリーズ</option></select><select data-log-state aria-label="状態で絞り込み"><option value="">すべての状態</option><option value="progress">途中まで</option><option value="saved">あとで読む</option><option value="unread">未読</option><option value="read">読了済み</option></select><select data-log-sort aria-label="並べ替え"><option value="recent">最近更新した順</option><option value="public">公開順</option><option value="short">短い順</option><option value="fear">恐怖度が高い順</option></select><button type="button" data-log-reset>条件をリセット</button></div><p class="log-result" data-log-result aria-live="polite">48話を表示中</p><div class="log-grid" data-reading-log-grid></div><p class="log-empty" data-log-empty hidden>条件に合う作品はありません。</p></section>
+</main>
+<footer>© 2026 境界夜話</footer>
+<script src="/kyokai-yawa/data/works.js"></script>
+<script src="/kyokai-yawa/data/reading-status.js"></script>
+<script src="/kyokai-yawa/data/saved-stories.js"></script>
+<script src="/kyokai-yawa/data/reading-log.js"></script>
+<script src="/kyokai-yawa/data/sw-register.js" defer></script>
+</body>
+</html>
+`;
+fs.writeFileSync(path.join(root,'reading-log.html'),page);
+
+const navBlock='<!-- READING_LOG_NAV_START --><a href="/kyokai-yawa/reading-log.html">読書記録</a><!-- READING_LOG_NAV_END -->';
+const navPattern=/\s*<!-- READING_LOG_NAV_START -->[\s\S]*?<!-- READING_LOG_NAV_END -->\s*/g;
+const updateIndex=()=>{
+  const file=path.join(root,'index.html');let html=fs.readFileSync(file,'utf8').replace(navPattern,'');
+  const pattern=/(<nav class="nav-links"[^>]*>[\s\S]*?)(<\/nav>)/;
+  if(!pattern.test(html))throw new Error('index.htmlの主要メニューが見つかりません');
+  html=html.replace(pattern,`$1${navBlock}$2`);fs.writeFileSync(file,html);
+};
+const updateSecondary=file=>{
+  let html=fs.readFileSync(file,'utf8').replace(navPattern,'');
+  const brand=/(<a class="brand"[^>]*>[\s\S]*?<\/a>)/;
+  if(!brand.test(html))throw new Error(`${path.relative(root,file)}のブランドリンクが見つかりません`);
+  html=html.replace(brand,`$1${navBlock}`);fs.writeFileSync(file,html);
+};
+updateIndex();
+for(const file of ['makabe.html','kurose.html','sakaki.html','kansoku.html'])updateSecondary(path.join(root,'series',file));
+for(const work of works)updateSecondary(path.join(root,'stories',work.file));
+console.log(`# 読書記録ページ正規化\n\n- 読書記録ページ: 1\n- 公開作品: ${works.length}\n- ナビゲーション反映: ${1+4+works.length}ページ\n- 検索・状態絞り込み・並べ替え: 対応\n- 保存方式: ブラウザー端末内localStorage\n`);
