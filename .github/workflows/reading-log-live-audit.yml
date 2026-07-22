@@ -9,7 +9,9 @@ on:
       - 'reading-log.html'
       - 'data/reading-log.css'
       - 'data/reading-log.js'
+      - 'data/reading-backup.js'
       - 'scripts/audit-live-reading-log.mjs'
+      - 'scripts/audit-live-reading-backup.mjs'
       - '.github/workflows/reading-log-live-audit.yml'
   workflow_dispatch:
 
@@ -34,17 +36,26 @@ jobs:
       - name: Wait for GitHub Pages deployment
         run: sleep 20
       - name: Audit production reading log
+        id: log
+        continue-on-error: true
         run: node scripts/audit-live-reading-log.mjs
-      - name: Commit production audit report
+      - name: Audit production reading record backup
+        id: backup
+        continue-on-error: true
+        run: node scripts/audit-live-reading-backup.mjs
+      - name: Commit production audit reports
         if: always()
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add reports/live-reading-log-audit.md
+          git add reports/live-reading-log-audit.md reports/live-reading-backup-audit.md
           if git diff --cached --quiet; then
-            echo "Production reading log audit is unchanged."
+            echo "Production reading log reports are unchanged."
           else
-            git commit -m "chore: record reading log production audit"
+            git commit -m "chore: record reading backup production audit"
             git pull --rebase origin main
             git push
           fi
+      - name: Fail when production audit errors exist
+        if: steps.log.outcome == 'failure' || steps.backup.outcome == 'failure'
+        run: exit 1
