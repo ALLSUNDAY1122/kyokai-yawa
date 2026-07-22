@@ -1,0 +1,74 @@
+name: Live Site Audit
+
+on:
+  push:
+    paths:
+      - 'index.html'
+      - '404.html'
+      - 'robots.txt'
+      - 'sitemap.xml'
+      - 'feed.xml'
+      - 'stories/**'
+      - 'data/**'
+      - 'assets/**'
+      - 'scripts/audit-live-site.mjs'
+      - '.github/workflows/live-site-audit.yml'
+  schedule:
+    - cron: '17 18 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: live-site-audit-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  audit-production:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Wait for GitHub Pages and audit production
+        run: |
+          success=0
+          for attempt in $(seq 1 30); do
+            echo "Production audit attempt ${attempt}/30"
+            if node scripts/audit-live-site.mjs; then
+              success=1
+              break
+            fi
+            sleep 10
+          done
+          if [ "$success" -ne 1 ]; then
+            echo "Production did not pass the audit within the deployment window."
+            exit 1
+          fi
+
+      - name: Upload production audit report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: live-site-audit-report
+          path: reports/live-site-audit.md
+          if-no-files-found: error
+
+      - name: Commit production audit report
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add reports/live-site-audit.md
+          if git diff --cached --quiet; then
+            echo "Production audit report is unchanged."
+          else
+            git commit -m "chore: record production live site audit"
+            git push
+          fi
