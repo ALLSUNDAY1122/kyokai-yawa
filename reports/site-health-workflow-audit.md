@@ -9,14 +9,14 @@
 - アクセシビリティ: axe-core WCAG 2.1 A/AA
 - 実行時監視: console.error・JavaScript例外・通信失敗・HTTP 4xx/5xx
 - 再試行: 最大1回
-- 統合実行上限: 25分
+- 統合実行上限: 20分
 - 失敗資料: HTML・trace・screenshot・videoを14日保存
-- エラー: 1
+- エラー: 0
 - 警告: 0
 
 ## エラー
 
-- 統合ジョブ実行上限がありません
+- なし
 
 ## 警告
 
