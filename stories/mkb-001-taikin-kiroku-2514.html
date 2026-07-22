@@ -34,6 +34,9 @@
 <!-- READER_STYLES_START -->
 <link rel="stylesheet" href="/kyokai-yawa/data/reader-tools.css">
 <!-- READER_STYLES_END -->
+<!-- STORY_OVERVIEW_STYLES_START -->
+<link rel="stylesheet" href="/kyokai-yawa/data/story-overview.css">
+<!-- STORY_OVERVIEW_STYLES_END -->
 </head>
 <body>
   <a class="skip" href="#story">本文へ移動</a>
@@ -41,8 +44,31 @@
   <main>
     <p class="eyebrow">Makabe Night Tales · MKB-001</p>
     <h1>退勤記録 25:14</h1>
-    <p class="summary">毎週一件だけ現れる25時14分の退勤記録。記録を直すと記憶まで消え、閉鎖八階の旧端末には一人分の退勤処理が残されていた。</p>
     <div class="meta" aria-label="作品情報"><span>真壁夜話</span><span>第1話</span><span>短編</span><span>約7分</span><span>恐怖レベル 4</span></div>
+<!-- STORY_OVERVIEW_START -->
+<section class="story-overview" aria-labelledby="story-overview-title">
+  <div class="story-overview__grid">
+    <div>
+      <p class="story-overview__eyebrow">BEFORE READING</p>
+      <h2 class="story-overview__title" id="story-overview-title">読む前の作品情報</h2>
+      <p class="story-overview__summary"><strong>あらすじ</strong><br>毎週一件だけ現れる25時14分の退勤記録。記録を直すと記憶まで消え、閉鎖八階の旧端末には一人分の退勤処理が残されていた。</p>
+    </div>
+    <dl class="story-overview__metrics">
+      <div><dt>読了目安</dt><dd>約7分</dd></div>
+      <div><dt>恐怖度</dt><dd><span aria-label="5段階中4">4 / 5</span><span class="story-fear" aria-hidden="true"><span class="is-filled"></span><span class="is-filled"></span><span class="is-filled"></span><span class="is-filled"></span><span></span></span></dd></div>
+      <div><dt>形式</dt><dd>一話完結</dd></div>
+    </dl>
+  </div>
+  <div class="story-overview__footer">
+    <div>
+      <p class="story-overview__eyebrow">題材</p>
+      <div class="story-overview__tags" aria-label="この作品の題材"><span class="story-overview__tag">現代怪談</span><span class="story-overview__tag">記録改変</span><span class="story-overview__tag">職場</span><span class="story-overview__tag">システム</span></div>
+      <p class="story-overview__guide">一話完結です。この作品から単独で読めます。</p>
+    </div>
+    <a class="story-overview__start" href="#story">本文を読む</a>
+  </div>
+</section>
+<!-- STORY_OVERVIEW_END -->
     <article id="story" tabindex="-1">
       <p>月曜の朝、前週分の勤怠CSVを給与ソフトへ入れる前に、私は異常値だけを確認する。</p>
       <p>欠勤、二重打刻、三十六時間勤務。たいていは入力ミスだ。</p>
