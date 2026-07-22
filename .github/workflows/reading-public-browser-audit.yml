@@ -1,0 +1,78 @@
+name: Public Reading Browser Audit
+
+on:
+  schedule:
+    - cron: '30 21 * * *' # 06:30 JST
+  workflow_run:
+    workflows:
+      - 'Reading Backup Browser Audit'
+      - 'Reading Log Audit'
+      - 'Content Audit'
+    types: [completed]
+  push:
+    paths:
+      - 'playwright.config.mjs'
+      - 'tests/reading-backup.spec.mjs'
+      - 'scripts/reading-browser-reporter.mjs'
+      - '.github/workflows/reading-public-browser-audit.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: public-reading-browser-main
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  public-browser-audit:
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    env:
+      PLAYWRIGHT_BASE_URL: https://allsunday1122.github.io/kyokai-yawa/
+      READING_BROWSER_REPORT: reading-public-browser-audit.md
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Wait for GitHub Pages deployment
+        if: github.event_name != 'schedule'
+        run: sleep 60
+      - name: Install Playwright Test
+        run: npm install --no-audit --no-fund
+      - name: Install Chromium and WebKit
+        run: npx playwright install --with-deps chromium webkit
+      - name: Operate the published site in real browsers
+        id: tests
+        continue-on-error: true
+        run: npx playwright test tests/reading-backup.spec.mjs --retries=2
+      - name: Upload public browser report traces screenshots and videos
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reading-public-browser-audit
+          path: |
+            reports/reading-public-browser-audit.md
+            playwright-report
+            test-results
+          if-no-files-found: warn
+          retention-days: 14
+      - name: Commit public browser audit report
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add reports/reading-public-browser-audit.md
+          if git diff --cached --quiet; then
+            echo "Public browser audit report is unchanged."
+          else
+            git commit -m "chore: record public reading browser audit"
+            git pull --rebase origin main
+            git push
+          fi
+      - name: Fail when public browser tests fail
+        if: steps.tests.outcome == 'failure'
+        run: exit 1
