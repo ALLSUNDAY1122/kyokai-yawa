@@ -60,6 +60,13 @@ const htmlTargets = [
     title: work.title,
   })),
 ];
+const iconFragments = [
+  '<link rel="manifest" href="/kyokai-yawa/manifest.webmanifest">',
+  '<link rel="icon" type="image/svg+xml" href="/kyokai-yawa/assets/app-icon.svg">',
+  '<link rel="icon" type="image/png" sizes="192x192" href="/kyokai-yawa/assets/app-icon-192.png">',
+  '<link rel="apple-touch-icon" sizes="180x180" href="/kyokai-yawa/assets/apple-touch-icon.png">',
+  '<meta name="apple-mobile-web-app-title" content="境界夜話">',
+];
 
 for (const target of htmlTargets) {
   try {
@@ -73,6 +80,9 @@ for (const target of htmlTargets) {
       errors.push(`${target.id}: 本番HTMLのcanonicalが不正です`);
     }
     if (!body.includes(target.title)) errors.push(`${target.id}: 本番HTMLにtitle文字列がありません`);
+    for (const fragment of iconFragments) {
+      if (!body.includes(fragment)) errors.push(`${target.id}: 本番HTMLにサイトアイコン設定がありません（${fragment}）`);
+    }
   } catch (error) {
     errors.push(`${target.id}: 取得失敗（${error.message}）`);
   }
@@ -86,8 +96,16 @@ const uniqueStaticLinks = new Set(staticStoryLinks);
 if (uniqueStaticLinks.size !== works.length) errors.push(`トップページの静的作品リンクが${works.length}件ではありません（${uniqueStaticLinks.size}件）`);
 for (const work of works) if (!uniqueStaticLinks.has(work.file)) errors.push(`トップページに${work.id}の静的リンクがありません`);
 
+const iconAssetPaths = [
+  'manifest.webmanifest',
+  'assets/app-icon.svg',
+  'assets/app-icon-192.png',
+  'assets/app-icon-512.png',
+  'assets/apple-touch-icon.png',
+];
 const assetPaths = new Set([
   'assets/social-card.png',
+  ...iconAssetPaths,
   'feed.xml',
   'sitemap.xml',
   'robots.txt',
@@ -99,24 +117,38 @@ for (const body of pageBodies.values()) {
   }
 }
 
-const typeByExtension = asset => {
-  if (asset.endsWith('.png')) return 'image/png';
-  if (asset.endsWith('.css')) return 'text/css';
-  if (asset.endsWith('.js')) return 'javascript';
-  if (asset.endsWith('.xml')) return 'xml';
-  if (asset.endsWith('.txt')) return 'text/plain';
-  return '';
+const expectedTypes = asset => {
+  if (asset.endsWith('.png')) return ['image/png'];
+  if (asset.endsWith('.svg')) return ['image/svg+xml'];
+  if (asset.endsWith('.css')) return ['text/css'];
+  if (asset.endsWith('.js')) return ['javascript'];
+  if (asset.endsWith('.xml')) return ['xml'];
+  if (asset.endsWith('.webmanifest')) return ['manifest+json', 'application/json'];
+  if (asset.endsWith('.txt')) return ['text/plain'];
+  return [];
 };
 
 for (const asset of [...assetPaths].sort()) {
   const url = `${base}${asset}`;
   try {
-    const { response, elapsed } = await request(url);
+    const { response, body, elapsed } = await request(url);
     const type = contentType(response);
     rows.push({ id: asset, url, status: response.status, type, elapsed, headers: headerSummary(response) });
     if (response.status !== 200) errors.push(`${asset}: HTTP ${response.status}`);
-    const expected = typeByExtension(asset);
-    if (expected && !type.toLowerCase().includes(expected)) errors.push(`${asset}: Content-Type不一致（${type || 'なし'}）`);
+    const expected = expectedTypes(asset);
+    if (expected.length && !expected.some(value => type.toLowerCase().includes(value))) {
+      errors.push(`${asset}: Content-Type不一致（${type || 'なし'}）`);
+    }
+    if (asset === 'manifest.webmanifest') {
+      try {
+        const manifest = JSON.parse(body);
+        if (manifest.name !== '境界夜話｜四つの怪談アーカイブ') errors.push('manifest.webmanifest: nameが不正です');
+        if (manifest.start_url !== '/kyokai-yawa/' || manifest.scope !== '/kyokai-yawa/') errors.push('manifest.webmanifest: start_urlまたはscopeが不正です');
+        if (!Array.isArray(manifest.icons) || manifest.icons.length < 2) errors.push('manifest.webmanifest: アイコンが2件未満です');
+      } catch (error) {
+        errors.push(`manifest.webmanifest: 本番JSONが不正です（${error.message}）`);
+      }
+    }
   } catch (error) {
     errors.push(`${asset}: 取得失敗（${error.message}）`);
   }
@@ -137,6 +169,9 @@ try {
   if (response.status !== 404) errors.push(`存在しないURL: HTTP ${response.status}（404ではありません）`);
   if (!body.includes('その記録は見つかりません')) errors.push('存在しないURL: カスタム404本文が配信されていません');
   if (!/noindex/i.test(body)) errors.push('存在しないURL: 404本文にnoindexがありません');
+  for (const fragment of iconFragments) {
+    if (!body.includes(fragment)) errors.push(`存在しないURL: 404本文にサイトアイコン設定がありません（${fragment}）`);
+  }
 } catch (error) {
   errors.push(`存在しないURL: 取得失敗（${error.message}）`);
 }
@@ -154,6 +189,7 @@ const report = [
   `- 実行日時: ${new Date().toISOString()}`,
   `- HTML確認: ${htmlTargets.length}ページ`,
   `- 公開資産確認: ${assetPaths.size}件`,
+  `- アイコン・manifest本番確認: ${iconAssetPaths.length}件`,
   `- エラー: ${errors.length}`,
   `- 警告: ${warnings.length}`,
   `- 応答時間中央値: ${formatMs(median(timings))}`,
@@ -178,6 +214,7 @@ const report = [
   '',
   `- HTML 200応答: ${htmlRows.filter(row => row.status === 200).length}/${htmlTargets.length}`,
   `- トップ静的作品リンク: ${uniqueStaticLinks.size}/${works.length}`,
+  `- アイコン・manifest HTTP 200: ${rows.filter(row => iconAssetPaths.includes(row.id) && row.status === 200).length}/${iconAssetPaths.length}`,
   `- 監査対象総数: ${rows.length}件`,
   '',
 ].join('\n');
