@@ -79,7 +79,9 @@ for (const target of htmlTargets) {
 }
 
 const topHtml = pageBodies.get(base) || '';
-const staticStoryLinks = [...topHtml.matchAll(/href=["']\/kyokai-yawa\/stories\/([^"']+)["']/g)].map(match => match[1]);
+const staticStoryLinks = [...topHtml.matchAll(/href=["']\/kyokai-yawa\/stories\/([^"']+)["']/g)]
+  .map(match => match[1])
+  .filter(link => !link.includes('${'));
 const uniqueStaticLinks = new Set(staticStoryLinks);
 if (uniqueStaticLinks.size !== works.length) errors.push(`トップページの静的作品リンクが${works.length}件ではありません（${uniqueStaticLinks.size}件）`);
 for (const work of works) if (!uniqueStaticLinks.has(work.file)) errors.push(`トップページに${work.id}の静的リンクがありません`);
