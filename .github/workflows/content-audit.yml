@@ -5,7 +5,9 @@ on:
     paths:
       - 'stories/**'
       - 'data/works.js'
+      - 'sitemap.xml'
       - 'scripts/audit-stories.mjs'
+      - 'scripts/normalize-reading-times.mjs'
       - '.github/workflows/content-audit.yml'
   workflow_dispatch:
 
@@ -24,7 +26,10 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Audit story metadata and reading times
+      - name: Normalize reading-time metadata
+        run: node scripts/normalize-reading-times.mjs
+
+      - name: Audit story metadata and cross-story repetition
         id: audit
         continue-on-error: true
         run: node scripts/audit-stories.mjs
@@ -37,16 +42,16 @@ jobs:
           path: reports/content-audit.md
           if-no-files-found: error
 
-      - name: Commit updated audit report
+      - name: Commit normalized metadata and audit report
         if: always()
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add reports/content-audit.md
+          git add stories data/works.js sitemap.xml reports/content-audit.md
           if git diff --cached --quiet; then
-            echo "Audit report is unchanged."
+            echo "Content metadata and audit report are unchanged."
           else
-            git commit -m "chore: update content audit report"
+            git commit -m "chore: normalize reading times and update audit report"
             git push
           fi
 
