@@ -12,11 +12,13 @@ on:
       - 'sitemap.xml'
       - 'feed.xml'
       - 'stories/**'
+      - 'series/**'
       - 'data/**'
       - 'assets/**'
       - 'scripts/audit-live-site.mjs'
       - 'scripts/audit-live-offline.mjs'
       - 'scripts/audit-live-reader-experience.mjs'
+      - 'scripts/audit-live-series-pages.mjs'
       - '.github/workflows/live-site-audit.yml'
   schedule:
     - cron: '17 18 * * *'
@@ -47,7 +49,7 @@ jobs:
           success=0
           for attempt in $(seq 1 30); do
             echo "Production audit attempt ${attempt}/30"
-            if node scripts/audit-live-site.mjs && node scripts/audit-live-offline.mjs && node scripts/audit-live-reader-experience.mjs; then
+            if node scripts/audit-live-site.mjs && node scripts/audit-live-offline.mjs && node scripts/audit-live-reader-experience.mjs && node scripts/audit-live-series-pages.mjs; then
               success=1
               break
             fi
@@ -71,7 +73,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add reports/live-site-audit.md reports/live-offline-audit.md reports/live-reader-experience-audit.md
+          git add reports/live-site-audit.md reports/live-offline-audit.md reports/live-reader-experience-audit.md reports/live-series-pages-audit.md
           if git diff --cached --quiet; then
             echo "Production audit reports are unchanged."
           else
