@@ -26,6 +26,10 @@ on:
       - '.github/workflows/content-audit.yml'
   workflow_dispatch:
 
+concurrency:
+  group: content-audit-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: write
 
