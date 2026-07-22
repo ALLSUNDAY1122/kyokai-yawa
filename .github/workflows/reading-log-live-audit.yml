@@ -1,0 +1,50 @@
+name: Live Reading Log Audit
+
+on:
+  workflow_run:
+    workflows: ['Reading Log Audit']
+    types: [completed]
+  push:
+    paths:
+      - 'reading-log.html'
+      - 'data/reading-log.css'
+      - 'data/reading-log.js'
+      - 'scripts/audit-live-reading-log.mjs'
+      - '.github/workflows/reading-log-live-audit.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: live-reading-log-main
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  audit-live:
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Wait for GitHub Pages deployment
+        run: sleep 20
+      - name: Audit production reading log
+        run: node scripts/audit-live-reading-log.mjs
+      - name: Commit production audit report
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add reports/live-reading-log-audit.md
+          if git diff --cached --quiet; then
+            echo "Production reading log audit is unchanged."
+          else
+            git commit -m "chore: record reading log production audit"
+            git pull --rebase origin main
+            git push
+          fi
