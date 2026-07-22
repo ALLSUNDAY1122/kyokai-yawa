@@ -22,6 +22,8 @@ on:
       - 'data/story-nav.js'
       - 'data/archive-tools.js'
       - 'data/sw-register.js'
+      - 'data/reader-tools.css'
+      - 'data/reader-tools.js'
       - 'data/story-style-*.css'
       - 'sitemap.xml'
       - 'scripts/audit-stories.mjs'
@@ -33,6 +35,7 @@ on:
       - 'scripts/audit-discovery.mjs'
       - 'scripts/audit-site-icons.mjs'
       - 'scripts/audit-offline.mjs'
+      - 'scripts/audit-reader-experience.mjs'
       - 'scripts/normalize-reading-times.mjs'
       - 'scripts/normalize-story-navigation.mjs'
       - 'scripts/normalize-fear-levels.mjs'
@@ -42,6 +45,7 @@ on:
       - 'scripts/normalize-discovery.mjs'
       - 'scripts/normalize-site-icons.mjs'
       - 'scripts/normalize-offline.mjs'
+      - 'scripts/normalize-reader-tools.mjs'
       - '.github/workflows/content-audit.yml'
   workflow_dispatch:
 
@@ -83,6 +87,9 @@ jobs:
 
       - name: Normalize service worker registration and offline page
         run: node scripts/normalize-offline.mjs
+
+      - name: Normalize mobile reader controls across story pages
+        run: node scripts/normalize-reader-tools.mjs
 
       - name: Normalize public asset references
         run: node scripts/normalize-public-assets.mjs
@@ -150,6 +157,11 @@ jobs:
         continue-on-error: true
         run: node scripts/audit-offline.mjs
 
+      - name: Audit smartphone reading controls and long-form navigation
+        id: reader_audit
+        continue-on-error: true
+        run: node scripts/audit-reader-experience.mjs
+
       - name: Upload audit reports
         if: always()
         uses: actions/upload-artifact@v4
@@ -173,5 +185,5 @@ jobs:
           fi
 
       - name: Fail when audit errors exist
-        if: steps.content_audit.outcome == 'failure' || steps.length_audit.outcome == 'failure' || steps.navigation_audit.outcome == 'failure' || steps.fear_audit.outcome == 'failure' || steps.html_audit.outcome == 'failure' || steps.assets_audit.outcome == 'failure' || steps.discovery_audit.outcome == 'failure' || steps.icons_audit.outcome == 'failure' || steps.offline_audit.outcome == 'failure'
+        if: steps.content_audit.outcome == 'failure' || steps.length_audit.outcome == 'failure' || steps.navigation_audit.outcome == 'failure' || steps.fear_audit.outcome == 'failure' || steps.html_audit.outcome == 'failure' || steps.assets_audit.outcome == 'failure' || steps.discovery_audit.outcome == 'failure' || steps.icons_audit.outcome == 'failure' || steps.offline_audit.outcome == 'failure' || steps.reader_audit.outcome == 'failure'
         run: exit 1
