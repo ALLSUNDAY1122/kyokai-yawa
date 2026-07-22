@@ -107,6 +107,11 @@ for (const work of works) {
       if (!existingStoryPaths.has(pathOnly)) errors.push(`${work.id}: 存在しない作品リンク ${href}`);
       continue;
     }
+    if (href.startsWith('/kyokai-yawa/data/')) {
+      const pathOnly = href.split(/[?#]/)[0].slice('/kyokai-yawa/'.length);
+      if (!fs.existsSync(path.join(root, pathOnly))) errors.push(`${work.id}: 存在しない公開資産 ${href}`);
+      continue;
+    }
     if (href === '/kyokai-yawa/' || href === '/kyokai-yawa/#works') continue;
     if (href.startsWith('/kyokai-yawa/#')) {
       const anchor = href.slice('/kyokai-yawa/#'.length);
