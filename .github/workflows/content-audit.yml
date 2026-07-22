@@ -16,6 +16,7 @@ on:
       - 'scripts/normalize-reading-times.mjs'
       - 'scripts/normalize-story-navigation.mjs'
       - 'scripts/normalize-fear-levels.mjs'
+      - 'scripts/normalize-html-basics.mjs'
       - '.github/workflows/content-audit.yml'
   workflow_dispatch:
 
@@ -42,6 +43,9 @@ jobs:
 
       - name: Normalize editorial fear levels
         run: node scripts/normalize-fear-levels.mjs
+
+      - name: Normalize HTML anchors and accessibility
+        run: node scripts/normalize-html-basics.mjs
 
       - name: Audit story metadata and cross-story repetition
         id: content_audit
@@ -81,7 +85,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add stories data/works.js sitemap.xml reports/*.md
+          git add index.html stories data/works.js sitemap.xml reports/*.md
           if git diff --cached --quiet; then
             echo "Content metadata and audit reports are unchanged."
           else
