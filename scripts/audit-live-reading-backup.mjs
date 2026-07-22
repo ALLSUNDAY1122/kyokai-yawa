@@ -1,0 +1,16 @@
+const base='https://allsunday1122.github.io/kyokai-yawa/';
+const errors=[];const warnings=[];const rows=[];const times=[];
+const get=async(label,path,expected)=>{const started=Date.now();const response=await fetch(`${base}${path}?audit=${Date.now()}`,{headers:{'cache-control':'no-cache'}});const elapsed=Date.now()-started;times.push(elapsed);const type=response.headers.get('content-type')||'';const text=await response.text();rows.push({label,http:response.status,type,time:elapsed});if(!response.ok)errors.push(`${label}: HTTP ${response.status}`);if(expected&&!type.includes(expected))errors.push(`${label}: Content-Typeが不正です（${type}）`);return text;};
+const page=await get('読書記録ページ','reading-log.html','text/html');
+const css=await get('読書記録CSS','data/reading-log.css','text/css');
+const backup=await get('バックアップJavaScript','data/reading-backup.js','javascript');
+await get('作品データ','data/works.js','javascript');
+await get('読了管理','data/reading-status.js','javascript');
+await get('保存管理','data/saved-stories.js','javascript');
+for(const token of ['data-reading-backup','data-backup-export','data-backup-file','data-backup-preview','value="merge"','value="replace"','data-backup-confirm','/kyokai-yawa/data/reading-backup.js'])if(!page.includes(token))errors.push(`本番バックアップ画面要素がありません: ${token}`);
+for(const token of ["SCHEMA='kyokai-yawa-reading-backup'",'const VERSION=1','validateBackup','sanitizeIds','sanitizePositions','JSON.stringify(payload,null,2)',"file.size>256*1024","mode==='replace'",'localStorage.setItem'])if(!backup.includes(token))errors.push(`本番バックアップ処理がありません: ${token}`);
+for(const risky of ['fetch(','sendBeacon','XMLHttpRequest','WebSocket','eval('])if(backup.includes(risky))errors.push(`本番バックアップJavaScriptに外部通信または危険な実行処理があります: ${risky}`);
+if(!css.includes('.backup-panel')||!css.includes('.backup-preview')||!css.includes('@media(max-width:620px)'))errors.push('本番バックアップCSSが不足しています');
+const sorted=[...times].sort((a,b)=>a-b);const median=sorted[Math.floor(sorted.length/2)]||0;const p95=sorted[Math.min(sorted.length-1,Math.ceil(sorted.length*.95)-1)]||0;
+const report=['# 境界夜話 本番読書記録バックアップ監査','',`- 実行日時: ${new Date().toISOString()}`,'- 読書記録ページ: 1','- 共通資産: 5','- 書き出し形式: JSON','- 復元方式: 追加 / 置換','- 復元前確認: あり','- 不正ファイル拒否: あり','- 外部送信: なし',`- エラー: ${errors.length}`,`- 警告: ${warnings.length}`,`- 応答時間中央値: ${median}ms`,`- 応答時間p95: ${p95}ms`,'','## エラー','',...(errors.length?errors.map(error=>`- ${error}`):['- なし']),'','## 警告','',...(warnings.length?warnings.map(warning=>`- ${warning}`):['- なし']),'','## 配信確認','','| 対象 | HTTP | Content-Type | 応答 |','|---|---:|---|---:|',...rows.map(row=>`| ${row.label} | ${row.http} | ${row.type} | ${row.time}ms |`),''].join('\n');
+await import('node:fs').then(fs=>{fs.mkdirSync('reports',{recursive:true});fs.writeFileSync('reports/live-reading-backup-audit.md',report);});console.log(report);if(errors.length)process.exitCode=1;
