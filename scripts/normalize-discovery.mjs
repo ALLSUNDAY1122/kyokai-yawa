@@ -4,6 +4,8 @@ import vm from 'node:vm';
 
 const root = process.cwd();
 const base = 'https://allsunday1122.github.io/kyokai-yawa/';
+const socialImage = `${base}assets/social-card.png`;
+const socialAlt = '境界夜話 四つの怪談アーカイブ';
 const indexPath = path.join(root, 'index.html');
 const worksPath = path.join(root, 'data', 'works.js');
 const context = { window: {} };
@@ -16,11 +18,35 @@ const escapeXml = value => String(value ?? '')
   .replaceAll('"', '&quot;')
   .replaceAll("'", '&apos;');
 
+const applySocialMeta = html => {
+  html = html
+    .replace(/<meta\s+property=["']og:image(?::[^"']+)?["'][^>]*>\s*/gi, '')
+    .replace(/<meta\s+name=["']twitter:image(?::[^"']+)?["'][^>]*>\s*/gi, '')
+    .replace(/<meta\s+name=["']twitter:card["']\s+content=["'][^"']*["'][^>]*>/i, '<meta name="twitter:card" content="summary_large_image">');
+
+  const imageMeta = [
+    `<meta property="og:image" content="${socialImage}">`,
+    `<meta property="og:image:secure_url" content="${socialImage}">`,
+    '<meta property="og:image:type" content="image/png">',
+    '<meta property="og:image:width" content="1200">',
+    '<meta property="og:image:height" content="630">',
+    `<meta property="og:image:alt" content="${socialAlt}">`,
+    `<meta name="twitter:image" content="${socialImage}">`,
+    `<meta name="twitter:image:alt" content="${socialAlt}">`,
+  ].join('');
+
+  const cardPattern = /<meta\s+name=["']twitter:card["'][^>]*>/i;
+  if (!cardPattern.test(html)) throw new Error('twitter:cardが見つかりません');
+  return html.replace(cardPattern, `${imageMeta}$&`);
+};
+
 const entries = works.map((work, index) => {
   const filePath = path.join(root, 'stories', work.file);
-  const html = fs.readFileSync(filePath, 'utf8');
+  let html = fs.readFileSync(filePath, 'utf8');
   const jsonText = html.match(/<script\s+type=["']application\/ld\+json["']>([\s\S]*?)<\/script>/i)?.[1] || '{}';
   const json = JSON.parse(jsonText);
+  html = applySocialMeta(html);
+  fs.writeFileSync(filePath, html);
   return {
     ...work,
     position: index + 1,
@@ -51,6 +77,12 @@ const graph = {
       inLanguage: 'ja',
       isPartOf: { '@id': `${base}#website` },
       mainEntity: { '@id': `${base}#stories` },
+      primaryImageOfPage: {
+        '@type': 'ImageObject',
+        url: socialImage,
+        width: 1200,
+        height: 630,
+      },
     },
     {
       '@type': 'ItemList',
@@ -68,7 +100,7 @@ const graph = {
   ],
 };
 
-let indexHtml = fs.readFileSync(indexPath, 'utf8');
+let indexHtml = applySocialMeta(fs.readFileSync(indexPath, 'utf8'));
 const graphScript = `<script type="application/ld+json">${JSON.stringify(graph)}</script>`;
 const jsonPattern = /<script\s+type=["']application\/ld\+json["']>[\s\S]*?<\/script>/i;
 if (!jsonPattern.test(indexHtml)) throw new Error('index.html: JSON-LDが見つかりません');
@@ -105,4 +137,4 @@ ${sorted.map(entry => `    <item>
 `;
 fs.writeFileSync(path.join(root, 'feed.xml'), rss);
 
-console.log(`# 検索・フィード正規化\n\n- 構造化作品一覧: ${entries.length}話\n- RSS項目: ${sorted.length}話\n- index.htmlへRSSリンクを追加\n`);
+console.log(`# 検索・フィード・SNS共有正規化\n\n- 構造化作品一覧: ${entries.length}話\n- RSS項目: ${sorted.length}話\n- OGP・X共有画像: トップ＋${entries.length}話\n`);
