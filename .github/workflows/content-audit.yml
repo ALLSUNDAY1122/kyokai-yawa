@@ -25,7 +25,11 @@ on:
       - 'data/sw-register.js'
       - 'data/reader-tools.css'
       - 'data/reader-tools.js'
+      - 'data/reading-status.css'
+      - 'data/reading-status.js'
       - 'data/series-pages.css'
+      - 'data/series-work-cards.css'
+      - 'data/series-archive-tools.js'
       - 'data/series-links.js'
       - 'data/related-stories.css'
       - 'data/story-overview.css'
@@ -43,7 +47,9 @@ on:
       - 'scripts/audit-site-icons.mjs'
       - 'scripts/audit-offline.mjs'
       - 'scripts/audit-reader-experience.mjs'
+      - 'scripts/audit-reading-status.mjs'
       - 'scripts/audit-series-pages.mjs'
+      - 'scripts/audit-series-work-cards.mjs'
       - 'scripts/audit-related-stories.mjs'
       - 'scripts/audit-story-overviews.mjs'
       - 'scripts/audit-work-cards.mjs'
@@ -59,6 +65,7 @@ on:
       - 'scripts/normalize-site-icons.mjs'
       - 'scripts/normalize-offline.mjs'
       - 'scripts/normalize-reader-tools.mjs'
+      - 'scripts/normalize-reading-status.mjs'
       - 'scripts/normalize-series-pages.mjs'
       - 'scripts/normalize-related-stories.mjs'
       - 'scripts/normalize-story-overviews.mjs'
@@ -140,6 +147,9 @@ jobs:
       - name: Generate dedicated series pages and discovery links
         run: node scripts/normalize-series-pages.mjs
 
+      - name: Normalize reading completion status across public pages
+        run: node scripts/normalize-reading-status.mjs
+
       - name: Audit story metadata and cross-story repetition
         id: content_audit
         continue-on-error: true
@@ -190,10 +200,20 @@ jobs:
         continue-on-error: true
         run: node scripts/audit-reader-experience.mjs
 
+      - name: Audit device-local reading completion status
+        id: reading_status_audit
+        continue-on-error: true
+        run: node scripts/audit-reading-status.mjs
+
       - name: Audit dedicated series pages and discovery links
         id: series_audit
         continue-on-error: true
         run: node scripts/audit-series-pages.mjs
+
+      - name: Audit comparable series story cards and controls
+        id: series_cards_audit
+        continue-on-error: true
+        run: node scripts/audit-series-work-cards.mjs
 
       - name: Audit story tags aftertaste and related links
         id: related_audit
@@ -238,5 +258,5 @@ jobs:
           fi
 
       - name: Fail when audit errors exist
-        if: steps.content_audit.outcome == 'failure' || steps.length_audit.outcome == 'failure' || steps.navigation_audit.outcome == 'failure' || steps.fear_audit.outcome == 'failure' || steps.html_audit.outcome == 'failure' || steps.assets_audit.outcome == 'failure' || steps.discovery_audit.outcome == 'failure' || steps.icons_audit.outcome == 'failure' || steps.offline_audit.outcome == 'failure' || steps.reader_audit.outcome == 'failure' || steps.series_audit.outcome == 'failure' || steps.related_audit.outcome == 'failure' || steps.overview_audit.outcome == 'failure' || steps.cards_audit.outcome == 'failure' || steps.static_render_audit.outcome == 'failure'
+        if: steps.content_audit.outcome == 'failure' || steps.length_audit.outcome == 'failure' || steps.navigation_audit.outcome == 'failure' || steps.fear_audit.outcome == 'failure' || steps.html_audit.outcome == 'failure' || steps.assets_audit.outcome == 'failure' || steps.discovery_audit.outcome == 'failure' || steps.icons_audit.outcome == 'failure' || steps.offline_audit.outcome == 'failure' || steps.reader_audit.outcome == 'failure' || steps.reading_status_audit.outcome == 'failure' || steps.series_audit.outcome == 'failure' || steps.series_cards_audit.outcome == 'failure' || steps.related_audit.outcome == 'failure' || steps.overview_audit.outcome == 'failure' || steps.cards_audit.outcome == 'failure' || steps.static_render_audit.outcome == 'failure'
         run: exit 1
