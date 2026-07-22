@@ -5,7 +5,8 @@ const root=process.cwd();
 const read=file=>fs.readFileSync(path.join(root,file),'utf8');
 const workflow=read('.github/workflows/reading-public-browser-audit.yml');
 const config=read('playwright.config.mjs');
-const tests=read('tests/reading-backup.spec.mjs');
+const backupTests=read('tests/reading-backup.spec.mjs');
+const stateTests=read('tests/reading-state.spec.mjs');
 const reporter=read('scripts/reading-browser-reporter.mjs');
 const errors=[];
 const warnings=[];
@@ -18,6 +19,7 @@ const requiredWorkflow=[
   ['READING_BROWSER_REPORT: reading-public-browser-audit.md','公開専用レポート'],
   ['timeout-minutes: 20','ジョブ実行上限'],
   ['sleep 60','GitHub Pages反映待機'],
+  ['tests/reading-backup.spec.mjs tests/reading-state.spec.mjs','バックアップと通常読書操作の同時試験'],
   ['--retries=2','公開試験の再試行'],
   ['retention-days: 14','失敗資料の保存期間'],
   ['contents: write','監査レポート保存権限'],
@@ -28,7 +30,9 @@ for(const asset of ['reports/reading-public-browser-audit.md','playwright-report
 if(!config.includes("const publicBaseURL=process.env.PLAYWRIGHT_BASE_URL?.trim()"))errors.push('公開URLへの切替処理がありません');
 if(!config.includes('const webServer=publicBaseURL?undefined'))errors.push('公開試験時にローカルサーバーを無効化していません');
 for(const browser of ["name:'chromium-desktop'","name:'webkit-mobile'"])if(!config.includes(browser))errors.push(`ブラウザー設定がありません: ${browser}`);
-for(const token of ['JSON書き出し','追加復元','置換復元','壊れたJSON','未知の作品ID','モバイル幅'])if(!tests.includes(token))errors.push(`実操作試験がありません: ${token}`);
+for(const token of ['JSON書き出し','追加復元','置換復元','壊れたJSON','未知の作品ID','モバイル幅'])if(!backupTests.includes(token))errors.push(`バックアップ実操作試験がありません: ${token}`);
+for(const token of ['読了とあとで読む','途中位置を保存','resume=1','本文末尾で自動読了','次の未読作品'])if(!stateTests.includes(token))errors.push(`通常読書操作試験がありません: ${token}`);
+if(!reporter.includes('読了切替・あとで読む・途中位置保存/再開・自動読了・次の未読'))errors.push('通常読書操作が監査レポートの対象に記載されていません');
 if(!reporter.includes("process.env.READING_BROWSER_REPORT"))errors.push('公開専用レポート名への切替がありません');
 if(!reporter.includes("process.env.PLAYWRIGHT_BASE_URL"))errors.push('監査対象URLのレポート記録がありません');
 if(workflow.includes('schedule:')&&!workflow.includes("cron: '30 21 * * *'"))warnings.push('定期実行時刻が06:30 JSTから変更されています');
@@ -40,7 +44,7 @@ const report=[
   '- 定期実行: 毎日06:30 JST',
   '- 追加実行: 主要読書ワークフロー完了後・設定変更時・手動',
   '- ブラウザー: Chromium desktop / WebKit mobile',
-  '- 操作対象: JSON書き出し・追加復元・置換復元・不正JSON拒否・画面反映',
+  '- 操作対象: 読了切替・あとで読む・途中位置保存/再開・自動読了・次の未読・JSON書き出し/追加復元/置換復元・不正JSON拒否・画面反映',
   '- 再試行: 最大2回',
   '- 実行上限: 20分',
   '- 失敗資料: HTML・trace・screenshot・videoを14日保存',
