@@ -6,15 +6,18 @@ on:
       - 'package.json'
       - 'playwright.config.mjs'
       - 'reading-log.html'
+      - 'stories/**.html'
       - 'data/works.js'
       - 'data/reading-status.js'
       - 'data/saved-stories.js'
+      - 'data/reader-tools.js'
       - 'data/reading-log.css'
       - 'data/reading-log.js'
       - 'data/reading-backup.js'
       - 'scripts/serve-playwright.mjs'
       - 'scripts/reading-browser-reporter.mjs'
       - 'tests/reading-backup.spec.mjs'
+      - 'tests/reading-state.spec.mjs'
       - '.github/workflows/reading-backup-browser-audit.yml'
   workflow_dispatch:
 
@@ -28,6 +31,7 @@ permissions:
 jobs:
   browser-audit:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -37,7 +41,7 @@ jobs:
         run: npm install --no-audit --no-fund
       - name: Install Chromium and WebKit
         run: npx playwright install --with-deps chromium webkit
-      - name: Run real-browser backup and restore tests
+      - name: Run real-browser reading interaction tests
         id: tests
         continue-on-error: true
         run: npm run test:e2e
