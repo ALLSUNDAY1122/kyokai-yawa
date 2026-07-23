@@ -3,8 +3,6 @@ name: Public Audit Incident Notification
 on:
   workflow_run:
     workflows:
-      - 'Public Reading Browser Audit'
-      - 'Public Site Health Audit'
       - 'Public Offline Browser Audit'
     types: [completed]
   push:
@@ -60,7 +58,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - name: Open update or close the public audit incident
+      - name: Open update or close the offline audit incident
         uses: actions/github-script@v7
         with:
           script: |
