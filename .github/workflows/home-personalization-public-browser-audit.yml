@@ -1,0 +1,74 @@
+name: Public Home Personalization Browser Audit
+
+on:
+  push:
+    paths:
+      - 'index.html'
+      - 'data/works.js'
+      - 'data/reading-status.js'
+      - 'data/saved-stories.js'
+      - 'data/home-personalization.js'
+      - 'tests/reading-discovery.spec.mjs'
+      - 'playwright.config.mjs'
+      - 'scripts/reading-browser-reporter.mjs'
+      - '.github/workflows/home-personalization-public-browser-audit.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: public-home-personalization-main
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  focused-browser-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      PLAYWRIGHT_BASE_URL: https://allsunday1122.github.io/kyokai-yawa/
+      READING_BROWSER_REPORT: home-personalization-public-browser-audit.md
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Wait for GitHub Pages deployment
+        run: sleep 60
+      - name: Install browser test dependencies
+        run: npm install --no-audit --no-fund
+      - name: Install Chromium and WebKit
+        run: npx playwright install --with-deps chromium webkit
+      - name: Verify returning and first-time visitor entry points
+        id: tests
+        continue-on-error: true
+        run: npx playwright test tests/reading-discovery.spec.mjs --grep '再訪履歴|履歴がない初回訪問' --retries=2
+      - name: Upload focused report and diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: home-personalization-public-browser-audit
+          path: |
+            reports/home-personalization-public-browser-audit.md
+            playwright-report
+            test-results
+          if-no-files-found: warn
+          retention-days: 14
+      - name: Commit focused public audit report
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add reports/home-personalization-public-browser-audit.md
+          if git diff --cached --quiet; then
+            echo "Focused personalization report is unchanged."
+          else
+            git commit -m "chore: record focused public personalization audit"
+            git pull --rebase origin main
+            git push
+          fi
+      - name: Fail when focused tests fail
+        if: steps.tests.outcome == 'failure'
+        run: exit 1
