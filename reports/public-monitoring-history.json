@@ -1,7 +1,31 @@
 {
   "version": 1,
-  "updatedAt": "2026-07-23T04:11:44.196Z",
+  "updatedAt": "2026-07-23T04:16:01.534Z",
   "entries": [
+    {
+      "kind": "incident-config",
+      "label": "障害Issue通知設定",
+      "source": "public-audit-incident-workflow-audit.md",
+      "executedAt": "2026-07-23T04:16:01.533Z",
+      "status": "passed",
+      "passed": null,
+      "failed": 0,
+      "skipped": null,
+      "warnings": 0,
+      "durationSeconds": null
+    },
+    {
+      "kind": "reading",
+      "label": "読書機能・54ページ品質",
+      "source": "reading-public-browser-audit.md",
+      "executedAt": "2026-07-23T04:14:05.823Z",
+      "status": "passed",
+      "passed": 36,
+      "failed": 0,
+      "skipped": 2,
+      "warnings": 0,
+      "durationSeconds": 44.4
+    },
     {
       "kind": "incident-config",
       "label": "障害Issue通知設定",
