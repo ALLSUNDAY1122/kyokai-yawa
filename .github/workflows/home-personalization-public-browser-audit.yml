@@ -10,6 +10,8 @@ on:
       - 'data/home-personalization.js'
       - 'tests/reading-discovery.spec.mjs'
       - 'playwright.config.mjs'
+      - 'scripts/normalize-home-personalization.mjs'
+      - 'scripts/audit-home-personalization.mjs'
       - 'scripts/reading-browser-reporter.mjs'
       - '.github/workflows/home-personalization-public-browser-audit.yml'
   workflow_dispatch:
