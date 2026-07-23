@@ -18,6 +18,13 @@ for(const [name,file] of Object.entries(configs)){
   if(!html.includes('/kyokai-yawa/data/series-archive-tools.js'))errors.push(`${name}: シリーズ内検索JavaScript参照がありません`);
   if(!html.includes('data-series-tools hidden'))errors.push(`${name}: JavaScript有効時だけ表示する検索欄がありません`);
   if(!html.includes('data-role="query"')||!html.includes('data-role="filter"')||!html.includes('data-role="sort"')||!html.includes('data-role="reset"'))errors.push(`${name}: 検索・絞り込み・並べ替え・リセットのいずれかがありません`);
+  for(const asset of ['/kyokai-yawa/data/works.js','/kyokai-yawa/data/reading-status.js','/kyokai-yawa/data/saved-stories.js'])if(!html.includes(asset))errors.push(`${name}: 読書状態連携資産がありません: ${asset}`);
+  for(const marker of ['READING_STATUS_STYLES_START','READING_STATUS_SCRIPT_START','SAVED_STORIES_STYLES_START','SAVED_STORIES_SCRIPT_START'])if(!html.includes(marker))errors.push(`${name}: 読書状態連携マーカーがありません: ${marker}`);
+  const worksPos=html.indexOf('/kyokai-yawa/data/works.js');
+  const readPos=html.indexOf('/kyokai-yawa/data/reading-status.js');
+  const savedPos=html.indexOf('/kyokai-yawa/data/saved-stories.js');
+  const toolsPos=html.indexOf('/kyokai-yawa/data/series-archive-tools.js');
+  if(!(worksPos>=0&&worksPos<readPos&&readPos<savedPos&&savedPos<toolsPos))errors.push(`${name}: 作品データ・読了・保存・検索JavaScriptの読み込み順が不正です`);
   for(let index=0;index<group.length;index++){
     const work=group[index];const card=cards[index]||'';const info=taxonomy[work.id];
     if(!info){errors.push(`${work.id}: 分類データがありません`);continue;}
@@ -39,10 +46,11 @@ for(const [name,file] of Object.entries(configs)){
 }
 const js=fs.readFileSync(path.join(root,'data','series-archive-tools.js'),'utf8');
 const css=fs.readFileSync(path.join(root,'data','series-work-cards.css'),'utf8');
-for(const token of ["filter.value==='quick'","filter.value==='fear5'","filter.value==='long'","sort.value==='short'","sort.value==='fear'","history.replaceState"])if(!js.includes(token))errors.push(`検索JavaScriptに必要処理がありません: ${token}`);
+for(const token of ["filter.value==='quick'","filter.value==='fear5'","filter.value==='long'","sort.value==='short'","sort.value==='fear'","history.replaceState","data-role=\"saved\"","data-role=\"read\""])if(!js.includes(token)&&!['data-role="saved"','data-role="read"'].includes(token))errors.push(`検索JavaScriptに必要処理がありません: ${token}`);
+for(const token of ["tools.querySelector('[data-role=\"read\"]')","tools.querySelector('[data-role=\"saved\"]')","kyokai-reading-status-change","kyokai-saved-stories-change"])if(!js.includes(token))errors.push(`検索JavaScriptに読書状態連携がありません: ${token}`);
 if(!css.includes('@media(max-width:520px)'))warnings.push('狭いスマートフォン向け調整がありません');
 if(cardTotal!==48)errors.push(`比較カード合計が48件ではありません（${cardTotal}件）`);
 if(tagTotal!==192)errors.push(`題材タグ合計が192件ではありません（${tagTotal}件）`);
 if(standalone!==36||serial!==12)errors.push(`形式内訳が36/12ではありません（${standalone}/${serial}）`);
-const report=['# 境界夜話 シリーズページ比較カード・検索監査','',`- シリーズページ: ${rows.length}/4`,`- 比較カード: ${cardTotal}/48`,`- 題材タグ: ${tagTotal}/192`,`- 一話完結: ${standalone}/36`,`- 連作・順番推奨: ${serial}/12`,'- シリーズ内検索: 作品名・題材・あらすじ・ID','- 絞り込み: 6分以内・恐怖度5・10分以上','- 並べ替え: 公開順・短い順・長い順・恐怖度順','- JavaScriptなしの作品リンク: はい',`- エラー: ${errors.length}`,`- 警告: ${warnings.length}`,'','## エラー','',...(errors.length?errors.map(x=>`- ${x}`):['- なし']),'','## 警告','',...(warnings.length?warnings.map(x=>`- ${x}`):['- なし']),'','## ページ別','',...rows.map(row=>`- ${row.name}: ${row.cards}カード`),''].join('\n');
+const report=['# 境界夜話 シリーズページ比較カード・検索監査','',`- シリーズページ: ${rows.length}/4`,`- 比較カード: ${cardTotal}/48`,`- 題材タグ: ${tagTotal}/192`,`- 一話完結: ${standalone}/36`,`- 連作・順番推奨: ${serial}/12`,'- シリーズ内検索: 作品名・題材・あらすじ・ID','- 絞り込み: 6分以内・恐怖度5・10分以上・未読/読了・あとで読む','- 並べ替え: 公開順・短い順・長い順・恐怖度順','- 読書状態連携: 作品データ→読了→保存→検索の順で読込','- JavaScriptなしの作品リンク: はい',`- エラー: ${errors.length}`,`- 警告: ${warnings.length}`,'','## エラー','',...(errors.length?errors.map(x=>`- ${x}`):['- なし']),'','## 警告','',...(warnings.length?warnings.map(x=>`- ${x}`):['- なし']),'','## ページ別','',...rows.map(row=>`- ${row.name}: ${row.cards}カード`),''].join('\n');
 fs.mkdirSync(path.join(root,'reports'),{recursive:true});fs.writeFileSync(path.join(root,'reports','series-work-cards-audit.md'),report);console.log(report);if(errors.length)process.exitCode=1;
