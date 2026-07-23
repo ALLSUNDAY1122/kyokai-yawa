@@ -39,7 +39,7 @@ if(exists('status.html')){
 
 if(exists('data/status.js')){
   const js=read('data/status.js');
-  const required=["const SOURCE='/kyokai-yawa/reports/public-monitoring-history.json'","expectedKinds=['reading','site-health','offline','incident-config']","cache:'no-store'","credentials:'same-origin'",'5*60*1000','visibilitychange','Asia/Tokyo','data.monitoringState'];
+  const required=["const SOURCE='/kyokai-yawa/reports/public-monitoring-history.json'","expectedKinds=['reading','site-health','offline','incident-config']","cache:'no-store'","credentials:'same-origin'",'5*60*1000','visibilitychange','Asia/Tokyo','dataset.monitoringState'];
   for(const token of required)if(!js.includes(token))errors.push(`status.jsに必要処理がありません: ${token}`);
   if(js.includes('XMLHttpRequest'))errors.push('status.jsがXMLHttpRequestを含んでいます');
   const external=[...js.matchAll(/https?:\/\/[^'"`\s)]+/g)].map(match=>match[0]);
