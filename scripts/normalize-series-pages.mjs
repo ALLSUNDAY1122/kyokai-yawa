@@ -61,10 +61,17 @@ for(const [name,config] of Object.entries(configs)){
 <script type="application/ld+json">${JSON.stringify(graph)}</script>
 <link rel="stylesheet" href="/kyokai-yawa/data/series-pages.css">
 <link rel="stylesheet" href="/kyokai-yawa/data/series-work-cards.css">
+<!-- READING_STATUS_STYLES_START -->
+<link rel="stylesheet" href="/kyokai-yawa/data/reading-status.css">
+<!-- READING_STATUS_STYLES_END -->
+<!-- SAVED_STORIES_STYLES_START -->
+<link rel="stylesheet" href="/kyokai-yawa/data/saved-stories.css">
+<!-- SAVED_STORIES_STYLES_END -->
+<link rel="stylesheet" href="/kyokai-yawa/data/accessibility-contrast.css">
 </head>
 <body>
 <a class="skip" href="#stories">作品一覧へ移動</a>
-<header class="site-header"><nav class="nav" aria-label="主要メニュー"><a class="brand" href="/kyokai-yawa/"><strong>境界夜話</strong><span>怪談アーカイブ</span></a><a class="back" href="/kyokai-yawa/#series">四シリーズ一覧へ</a></nav></header>
+<header class="site-header"><nav class="nav" aria-label="主要メニュー"><a class="brand" href="/kyokai-yawa/"><strong>境界夜話</strong><span>怪談アーカイブ</span></a><!-- READING_LOG_NAV_START --><a href="/kyokai-yawa/reading-log.html">読書記録</a><!-- READING_LOG_NAV_END --><a class="back" href="/kyokai-yawa/#series">四シリーズ一覧へ</a></nav></header>
 <main>
 <section class="hero"><div><p class="eyebrow">${esc(config.english)} · 12 STORIES</p><h1>${esc(name)}</h1><p class="lead">${esc(config.lead)}</p></div><dl class="hero-meta"><div><dt>主な題材</dt><dd>${esc(config.flavor)}</dd></div><div><dt>最初の一話</dt><dd>${esc(config.start)}</dd></div><div><dt>公開状況</dt><dd>全12話公開</dd></div></dl></section>
 <section class="guide" aria-label="シリーズ案内"><article><h2>読む順番</h2><p>${esc(config.order)}</p></article><article><h2>一話の構成</h2><p>${esc(config.promise)}</p></article><article><h2>作品の選び方</h2><p>題材、読了時間、恐怖度、分量を比較できます。検索と並べ替えを使って、このシリーズ内から次の一話を選べます。</p></article></section>
@@ -72,8 +79,17 @@ for(const [name,config] of Object.entries(configs)){
 <nav class="other-series" aria-label="他のシリーズ"><h2>他の怪談シリーズ</h2><div class="other-series-list">${others}</div></nav>
 </main>
 <footer>© 2026 境界夜話</footer>
+<script src="/kyokai-yawa/data/works.js" defer></script>
+<!-- READING_STATUS_SCRIPT_START -->
+<script src="/kyokai-yawa/data/reading-status.js" defer></script>
+<!-- READING_STATUS_SCRIPT_END -->
+<!-- SAVED_STORIES_SCRIPT_START -->
+<script src="/kyokai-yawa/data/saved-stories.js" defer></script>
+<!-- SAVED_STORIES_SCRIPT_END -->
 <script src="/kyokai-yawa/data/series-archive-tools.js" defer></script>
+<!-- SW_REGISTER_START -->
 <script src="/kyokai-yawa/data/sw-register.js" defer></script>
+<!-- SW_REGISTER_END -->
 </body>
 </html>
 `;
@@ -103,4 +119,4 @@ const seriesEntries=Object.values(configs).map(config=>({loc:`${base}series/${co
 const sitemapEntries=[{loc:base,lastmod:updated},...seriesEntries,...storyEntries];
 const sitemap=`<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${sitemapEntries.map(entry=>`  <url><loc>${xml(entry.loc)}</loc><lastmod>${entry.lastmod}</lastmod></url>`).join('\n')}\n</urlset>\n`;
 fs.writeFileSync(path.join(root,'sitemap.xml'),sitemap);
-console.log(`# シリーズ専用ページ正規化\n\n- シリーズページ: ${Object.keys(configs).length}ページ\n- 比較表示カード: ${works.length}話\n- 題材タグ: ${works.length*4}件\n- シリーズ内検索・絞り込み・並べ替え: 対応\n- sitemap URL: ${sitemapEntries.length}件\n`);
+console.log(`# シリーズ専用ページ正規化\n\n- シリーズページ: ${Object.keys(configs).length}ページ\n- 比較表示カード: ${works.length}話\n- 題材タグ: ${works.length*4}件\n- シリーズ内検索・絞り込み・並べ替え: 対応\n- 読了・あとで読む連携: 対応\n- sitemap URL: ${sitemapEntries.length}件\n`);
