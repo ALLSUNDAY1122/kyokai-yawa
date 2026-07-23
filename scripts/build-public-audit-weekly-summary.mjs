@@ -4,7 +4,10 @@ import { execFileSync } from 'node:child_process';
 
 const root=process.cwd();
 const outputPath=path.join(root,'reports','public-audit-weekly-summary.md');
+const performancePath=path.join(root,'reports','public-audit-weekly-performance.json');
 const periodDays=7;
+const durationRatioThreshold=1.5;
+const retryRateThreshold=0.25;
 const now=new Date();
 const periodStart=new Date(now.getTime()-periodDays*24*60*60*1000);
 const futureLimit=new Date(now.getTime()+24*60*60*1000);
@@ -27,6 +30,8 @@ const median=values=>{
   return sorted.length%2?sorted[middle]:(sorted[middle-1]+sorted[middle])/2;
 };
 const formatSeconds=value=>value?`${value.toFixed(1)}秒`:'—';
+const formatPercent=value=>`${(value*100).toFixed(1)}%`;
+const formatRatio=value=>value?`${value.toFixed(2)}倍`:'—';
 const formatJst=date=>new Date(date.getTime()+9*60*60*1000).toISOString().replace('T',' ').slice(0,16)+' JST';
 const statusJa=status=>status==='passed'?'成功':status==='failed'?'失敗':status||'不明';
 
@@ -76,8 +81,62 @@ const successfulRuns=records.filter(record=>record.status==='passed'&&record.fai
 const failedRuns=records.filter(record=>record.status!=='passed'||record.failed>0).length;
 const retryRuns=records.filter(record=>record.retries>0).length;
 const totalRetries=records.reduce((sum,record)=>sum+record.retries,0);
+const retryRate=totalRuns?retryRuns/totalRuns:0;
+const retryDegraded=totalRuns>0&&retryRate>=retryRateThreshold;
 const latestRecords=sources.map(source=>grouped.get(source.key)?.at(-1)).filter(Boolean);
 const allLatestHealthy=latestRecords.length===sources.length&&latestRecords.every(record=>record.status==='passed'&&record.failed===0);
+
+const performanceSources=sources.map(source=>{
+  const items=grouped.get(source.key)||[];
+  const latest=items.at(-1);
+  const durations=items.map(item=>item.duration).filter(value=>value>0);
+  const durationMedian=median(durations);
+  const durationRatio=latest&&latest.duration>0&&durationMedian>0?latest.duration/durationMedian:0;
+  const durationDegraded=Boolean(latest&&durationMedian>0&&latest.duration>=durationMedian*durationRatioThreshold);
+  const sourceRetryRuns=items.filter(item=>item.retries>0).length;
+  const sourceRetryRate=items.length?sourceRetryRuns/items.length:0;
+  return {
+    key:source.key,
+    label:source.label,
+    runs:items.length,
+    latestTimestamp:latest?.timestamp?.toISOString()||null,
+    latestCommit:latest?.sha||null,
+    latestDuration:Number((latest?.duration||0).toFixed(3)),
+    medianDuration:Number(durationMedian.toFixed(3)),
+    durationRatio:Number(durationRatio.toFixed(4)),
+    durationDegraded,
+    retryRuns:sourceRetryRuns,
+    retryRate:Number(sourceRetryRate.toFixed(4)),
+  };
+});
+
+const durationBreaches=performanceSources.filter(source=>source.durationDegraded);
+const reasons=[
+  ...durationBreaches.map(source=>`${source.label}: 最新${formatSeconds(source.latestDuration)}が7日中央値${formatSeconds(source.medianDuration)}の${formatRatio(source.durationRatio)}です`),
+  ...(retryDegraded?[`全監査: 再試行発生率${formatPercent(retryRate)}が基準${formatPercent(retryRateThreshold)}以上です`]:[]),
+];
+const performanceBreached=durationBreaches.length>0||retryDegraded;
+const performance={
+  schema:'kyokai-public-audit-performance-v1',
+  generatedAt:now.toISOString(),
+  periodStart:periodStart.toISOString(),
+  periodEnd:now.toISOString(),
+  periodDays,
+  thresholds:{
+    durationRatio:durationRatioThreshold,
+    retryRate:retryRateThreshold,
+  },
+  totals:{
+    runs:totalRuns,
+    retryRuns,
+    retries:totalRetries,
+    retryRate:Number(retryRate.toFixed(4)),
+    retryDegraded,
+  },
+  sources:performanceSources,
+  breached:performanceBreached,
+  reasons,
+};
 
 const rows=sources.map(source=>{
   const items=grouped.get(source.key)||[];
@@ -91,6 +150,8 @@ const rows=sources.map(source=>{
   }
   return `| ${source.label} | ${items.length} | ${items.filter(item=>item.status==='passed'&&item.failed===0).length} | ${items.filter(item=>item.status!=='passed'||item.failed>0).length} | ${items.reduce((sum,item)=>sum+item.retries,0)} | ${formatSeconds(median(durations))} | ${formatSeconds(durations.length?Math.max(...durations):0)} | ${latest?formatSeconds(latest.duration):'—'} | ${trend} |`;
 });
+
+const performanceRows=performanceSources.map(source=>`| ${source.label} | ${source.runs} | ${formatSeconds(source.medianDuration)} | ${formatSeconds(source.latestDuration)} | ${formatRatio(source.durationRatio)} | ${source.durationDegraded?'劣化':'正常'} | ${formatPercent(source.retryRate)} |`);
 
 const incidents=records.filter(record=>record.status!=='passed'||record.failed>0||record.retries>0).sort((a,b)=>b.timestamp-a.timestamp);
 const incidentLines=incidents.length?incidents.map(record=>`- ${formatJst(record.timestamp)}｜${record.label}｜${statusJa(record.status)}｜失敗${record.failed}件・再試行${record.retries}回｜${record.sha.slice(0,8)}`):['- なし'];
@@ -110,7 +171,9 @@ const report=[
   `- 成功実行: ${successfulRuns}件`,
   `- 失敗実行: ${failedRuns}件`,
   `- 再試行発生: ${retryRuns}実行・合計${totalRetries}回`,
+  `- 再試行率: ${formatPercent(retryRate)}（劣化基準 ${formatPercent(retryRateThreshold)}以上）`,
   `- 直近状態: ${allLatestHealthy?'3監査すべて正常':'要確認'}`,
+  `- 性能劣化判定: ${performanceBreached?'要確認':'正常'}`,
   '- 集計元: Git履歴内の監査Markdown（外部分析サービス不使用）',
   '',
   '## 監査別集計',
@@ -118,6 +181,21 @@ const report=[
   '| 監査 | 実行 | 成功 | 失敗 | 再試行 | 中央値 | 最大 | 最新 | 期間内変化 |',
   '|---|---:|---:|---:|---:|---:|---:|---:|---:|',
   ...rows,
+  '',
+  '## 性能劣化判定',
+  '',
+  `- 所要時間基準: 最新が7日中央値の${durationRatioThreshold.toFixed(2)}倍以上`,
+  `- 再試行率基準: 全監査の実行中${formatPercent(retryRateThreshold)}以上`,
+  `- 現在の再試行率: ${formatPercent(retryRate)}（${retryRuns}/${totalRuns||0}実行）`,
+  `- 総合判定: ${performanceBreached?'要確認':'正常'}`,
+  '',
+  '| 監査 | 実行 | 7日中央値 | 最新 | 中央値比 | 所要時間判定 | 監査別再試行率 |',
+  '|---|---:|---:|---:|---:|---:|---:|',
+  ...performanceRows,
+  '',
+  '### 判定理由',
+  '',
+  ...(reasons.length?reasons.map(reason=>`- ${reason}`):['- 基準超過なし']),
   '',
   '## 失敗・再試行履歴',
   '',
@@ -131,4 +209,5 @@ const report=[
 
 fs.mkdirSync(path.dirname(outputPath),{recursive:true});
 fs.writeFileSync(outputPath,report);
+fs.writeFileSync(performancePath,JSON.stringify(performance,null,2)+'\n');
 console.log(report);
