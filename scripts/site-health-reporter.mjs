@@ -28,6 +28,7 @@ class SiteHealthReporter{
     const failed=rows.filter(row=>['failed','timedOut','interrupted'].includes(row.status)).length;
     const skipped=rows.filter(row=>row.status==='skipped').length;
     const projects=[...new Set(rows.map(row=>row.project))];
+    const pages=[...new Set(rows.map(row=>row.page).filter(Boolean))];
     const target=process.env.PLAYWRIGHT_BASE_URL?.trim()||'ローカル生成サイト';
     const reportName=process.env.SITE_HEALTH_REPORT?.trim()||'site-health-browser-audit.md';
     const report=[
@@ -36,7 +37,8 @@ class SiteHealthReporter{
       `- 実行日時: ${new Date().toISOString()}`,
       `- 実行対象: ${target}`,
       `- 実行環境: ${projects.join(' / ')||'なし'}`,
-      '- 対象: トップ・4シリーズ・単独作品・連作作品・読書記録',
+      `- 対象ページ: ${pages.length}/54（トップ1・シリーズ4・作品48・読書記録1）`,
+      `- 実行ケース: ${rows.length}/108`,
       '- アクセシビリティ: axe-core WCAG 2.1 A/AA',
       '- 実行時監視: console.error・JavaScript例外・通信失敗・HTTP 4xx/5xx',
       `- テスト結果: ${fullResult.status}`,
