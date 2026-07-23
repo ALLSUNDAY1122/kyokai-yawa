@@ -9,6 +9,10 @@
 
     const style=document.createElement('style');
     style.textContent=`
+      .first-visit-guide{display:grid;grid-template-columns:minmax(250px,1.3fr) repeat(4,minmax(150px,.7fr));gap:12px;margin:0 0 24px;padding:18px;border:1px solid var(--line);background:linear-gradient(135deg,rgba(143,38,48,.14),rgba(199,167,106,.06))}
+      .first-visit-guide__intro{padding:4px 8px 4px 2px}.first-visit-guide__intro h2{margin:0 0 8px;font-size:1.2rem;color:var(--ink)}.first-visit-guide__intro p{margin:0;color:var(--muted);line-height:1.75}
+      .first-visit-guide__link{display:flex;min-height:92px;flex-direction:column;justify-content:center;gap:5px;padding:14px;border:1px solid var(--line);background:#13110f;color:var(--ink);text-decoration:none}
+      .first-visit-guide__link:hover{border-color:var(--gold);background:#211b13}.first-visit-guide__link strong{color:#f1dfbd}.first-visit-guide__link span{font-size:.86rem;color:var(--muted);line-height:1.5}
       .archive-tools{display:grid;grid-template-columns:minmax(230px,1.4fr) repeat(5,minmax(125px,.62fr));gap:10px;margin:0 0 22px}
       .archive-tools input,.archive-tools select,.archive-tools button{min-height:44px;border:1px solid var(--line);background:#13110f;color:var(--ink);padding:0 13px;font:inherit}
       .archive-tools input::placeholder{color:var(--dim)}
@@ -21,11 +25,26 @@
       .work-card[hidden]{display:none}
       .series-detail-link{display:inline-flex;min-height:44px;align-items:center;margin-top:14px;padding:0 13px;border:1px solid var(--line);background:#21150f;color:#f0dfc0;text-decoration:none}
       .series-detail-link:hover{border-color:var(--gold)}
-      @media(max-width:1180px){.archive-tools{grid-template-columns:repeat(3,minmax(0,1fr))}.archive-tools input{grid-column:1/-1}}
+      @media(max-width:1180px){.first-visit-guide{grid-template-columns:repeat(2,minmax(0,1fr))}.first-visit-guide__intro{grid-column:1/-1}.archive-tools{grid-template-columns:repeat(3,minmax(0,1fr))}.archive-tools input{grid-column:1/-1}}
       @media(max-width:720px){.archive-tools{grid-template-columns:repeat(2,minmax(0,1fr))}}
-      @media(max-width:620px){.archive-tools{grid-template-columns:1fr}.archive-tools input{grid-column:auto}.archive-actions,.archive-result{grid-column:1}.archive-actions{display:grid}.archive-actions button{width:100%}}
+      @media(max-width:620px){.first-visit-guide{grid-template-columns:1fr;padding:14px}.first-visit-guide__intro{grid-column:auto}.first-visit-guide__link{min-height:76px}.archive-tools{grid-template-columns:1fr}.archive-tools input{grid-column:auto}.archive-actions,.archive-result{grid-column:1}.archive-actions{display:grid}.archive-actions button{width:100%}}
     `;
     document.head.appendChild(style);
+
+    const firstVisit=document.createElement('section');
+    firstVisit.className='first-visit-guide';
+    firstVisit.setAttribute('aria-labelledby','first-visit-title');
+    firstVisit.innerHTML=`
+      <div class="first-visit-guide__intro">
+        <h2 id="first-visit-title">初めての方へ</h2>
+        <p>好みに近い一話から始められます。四作品とも、その回だけで事件と結末が分かる入口です。</p>
+      </div>
+      <a class="first-visit-guide__link" href="/kyokai-yawa/stories/mkb-001-taikin-kiroku-2514.html"><strong>現代・職場の怪談</strong><span>真壁夜話「退勤記録 25:14」</span></a>
+      <a class="first-visit-guide__link" href="/kyokai-yawa/stories/krs-001-sanbonme-no-sakaigi.html"><strong>土地・民俗の怪談</strong><span>黒瀬蒐集録「三本目の境木」</span></a>
+      <a class="first-visit-guide__link" href="/kyokai-yawa/stories/skk-001-butsuma-no-natsufuku.html"><strong>家族・記憶の怪談</strong><span>榊家異聞「仏間の夏服」</span></a>
+      <a class="first-visit-guide__link" href="/kyokai-yawa/stories/kks-s1e01-sakaime-no-heya.html"><strong>連作・境界の怪談</strong><span>境界観測記「境目の部屋」</span></a>
+    `;
+    section.parentNode.insertBefore(firstVisit,section);
 
     const seriesPages={
       'series-makabe':'/kyokai-yawa/series/makabe.html',
