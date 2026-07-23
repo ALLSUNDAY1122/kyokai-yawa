@@ -1,6 +1,9 @@
 export const INCIDENT_TITLE='[監査障害] 境界夜話 公開サイト';
 export const INCIDENT_LABEL='public-site-incident';
 export const INCIDENT_MARKER='<!-- public-site-audit-incident -->';
+export const LEGACY_INCIDENT_LABEL='site-monitoring';
+export const LEGACY_INCIDENT_MARKER='<!-- kyokai-public-audit-incident -->';
+export const LEGACY_INCIDENT_TITLE_PREFIX='[監視] 境界夜話 ';
 
 const runUrl=context=>`${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
 const shaText=context=>String(context.sha||'').slice(0,12)||'不明';
@@ -22,16 +25,20 @@ async function ensureLabel(github,context){
   }
 }
 
-async function findOpenIncident(github,context){
+const isCurrentIncident=issue=>issue.title===INCIDENT_TITLE&&String(issue.body||'').includes(INCIDENT_MARKER);
+const isLegacyIncident=issue=>String(issue.title||'').startsWith(LEGACY_INCIDENT_TITLE_PREFIX)
+  &&String(issue.title||'').endsWith(' 失敗')
+  &&String(issue.body||'').includes(LEGACY_INCIDENT_MARKER);
+
+async function findOpenIncidents(github,context){
   const {owner,repo}=context.repo;
-  const {data}=await github.rest.issues.listForRepo({
-    owner,
-    repo,
-    state:'open',
-    labels:INCIDENT_LABEL,
-    per_page:100,
-  });
-  return data.find(issue=>issue.title===INCIDENT_TITLE&&String(issue.body||'').includes(INCIDENT_MARKER))||null;
+  const {data}=await github.rest.issues.listForRepo({owner,repo,state:'open',per_page:100});
+  const issues=data.filter(issue=>!issue.pull_request&&(isCurrentIncident(issue)||isLegacyIncident(issue)));
+  return {
+    current:issues.find(isCurrentIncident)||null,
+    legacy:issues.filter(isLegacyIncident),
+    all:issues,
+  };
 }
 
 const failureBody=({context,readingOutcome,healthOutcome})=>[
@@ -48,24 +55,79 @@ const failureBody=({context,readingOutcome,healthOutcome})=>[
 ].join('\n');
 
 const recoveryBody=context=>[
-  '公開サイトの再監査が成功したため、自動的に復旧扱いとします。',
+  '公開サイトの統合再監査が成功したため、自動的に復旧扱いとします。',
   '',
   `- 復旧確認日時: ${detectedAt()}`,
   `- 対象コミット: \`${shaText(context)}\``,
   `- 実行結果: ${runUrl(context)}`,
 ].join('\n');
 
+async function closeIssue(github,context,issue,body){
+  const {owner,repo}=context.repo;
+  await github.rest.issues.createComment({owner,repo,issue_number:issue.number,body});
+  await github.rest.issues.update({
+    owner,
+    repo,
+    issue_number:issue.number,
+    state:'closed',
+    state_reason:'completed',
+  });
+}
+
+async function closeLegacyDuplicates(github,context,legacy,currentNumber){
+  for(const issue of legacy){
+    await closeIssue(github,context,issue,[
+      `統合監視Issue #${currentNumber}へ移行したため、この旧監視Issueをクローズします。`,
+      '',
+      `- 移行日時: ${detectedAt()}`,
+      `- 統合監査: ${runUrl(context)}`,
+    ].join('\n'));
+  }
+}
+
 export async function managePublicAuditIncident({github,context,failed,readingOutcome='unknown',healthOutcome='unknown'}){
   await ensureLabel(github,context);
   const {owner,repo}=context.repo;
-  const incident=await findOpenIncident(github,context);
+  const incidents=await findOpenIncidents(github,context);
 
   if(failed){
     const body=failureBody({context,readingOutcome,healthOutcome});
-    if(incident){
-      await github.rest.issues.createComment({owner,repo,issue_number:incident.number,body});
-      return {action:'commented',issueNumber:incident.number};
+    if(incidents.current){
+      await github.rest.issues.createComment({owner,repo,issue_number:incidents.current.number,body});
+      if(incidents.legacy.length)await closeLegacyDuplicates(github,context,incidents.legacy,incidents.current.number);
+      return {
+        action:incidents.legacy.length?'commented-and-closed-legacy':'commented',
+        issueNumber:incidents.current.number,
+        closedLegacy:incidents.legacy.map(issue=>issue.number),
+      };
     }
+
+    if(incidents.legacy.length){
+      const [primary,...duplicates]=incidents.legacy;
+      const migratedBody=[
+        INCIDENT_MARKER,
+        '旧方式の監視Issueを、読書機能と54ページ品質監査をまとめた統合監視へ移行しました。',
+        '',
+        '## 旧Issueの記録',
+        '',
+        String(primary.body||''),
+        '',
+        '---',
+        '',
+        body,
+      ].join('\n');
+      await github.rest.issues.update({
+        owner,
+        repo,
+        issue_number:primary.number,
+        title:INCIDENT_TITLE,
+        body:migratedBody,
+        labels:[INCIDENT_LABEL],
+      });
+      if(duplicates.length)await closeLegacyDuplicates(github,context,duplicates,primary.number);
+      return {action:'migrated',issueNumber:primary.number,closedLegacy:duplicates.map(issue=>issue.number)};
+    }
+
     const {data}=await github.rest.issues.create({
       owner,
       repo,
@@ -73,22 +135,14 @@ export async function managePublicAuditIncident({github,context,failed,readingOu
       body,
       labels:[INCIDENT_LABEL],
     });
-    return {action:'created',issueNumber:data.number};
+    return {action:'created',issueNumber:data.number,closedLegacy:[]};
   }
 
-  if(!incident)return {action:'none',issueNumber:null};
-  await github.rest.issues.createComment({
-    owner,
-    repo,
-    issue_number:incident.number,
-    body:recoveryBody(context),
-  });
-  await github.rest.issues.update({
-    owner,
-    repo,
-    issue_number:incident.number,
-    state:'closed',
-    state_reason:'completed',
-  });
-  return {action:'closed',issueNumber:incident.number};
+  if(!incidents.all.length)return {action:'none',issueNumber:null,issueNumbers:[]};
+  for(const issue of incidents.all)await closeIssue(github,context,issue,recoveryBody(context));
+  return {
+    action:incidents.all.length===1?'closed':'closed-multiple',
+    issueNumber:incidents.all[0].number,
+    issueNumbers:incidents.all.map(issue=>issue.number),
+  };
 }
