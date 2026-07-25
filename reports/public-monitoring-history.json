@@ -1,7 +1,19 @@
 {
   "version": 1,
-  "updatedAt": "2026-07-25T22:59:22.113Z",
+  "updatedAt": "2026-07-25T23:29:14.241Z",
   "entries": [
+    {
+      "kind": "incident-config",
+      "label": "障害Issue通知設定",
+      "source": "public-audit-incident-workflow-audit.md",
+      "executedAt": "2026-07-25T23:29:14.241Z",
+      "status": "passed",
+      "passed": null,
+      "failed": 0,
+      "skipped": null,
+      "warnings": 0,
+      "durationSeconds": null
+    },
     {
       "kind": "incident-config",
       "label": "障害Issue通知設定",
@@ -571,18 +583,6 @@
       "label": "障害Issue通知設定",
       "source": "public-audit-incident-workflow-audit.md",
       "executedAt": "2026-07-23T04:09:07.504Z",
-      "status": "passed",
-      "passed": null,
-      "failed": 0,
-      "skipped": null,
-      "warnings": 0,
-      "durationSeconds": null
-    },
-    {
-      "kind": "incident-config",
-      "label": "障害Issue通知設定",
-      "source": "public-audit-incident-workflow-audit.md",
-      "executedAt": "2026-07-23T04:06:08.588Z",
       "status": "passed",
       "passed": null,
       "failed": 0,
