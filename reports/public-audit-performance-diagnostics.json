@@ -1,19 +1,149 @@
 {
   "schema": "kyokai-public-audit-performance-diagnostics-v1",
-  "generatedAt": "2026-07-23T01:04:43.707Z",
-  "performanceGeneratedAt": "2026-07-23T01:04:43.504Z",
-  "breached": false,
+  "generatedAt": "2026-07-26T22:50:41.363Z",
+  "performanceGeneratedAt": "2026-07-26T22:50:40.957Z",
+  "breached": true,
   "selfTest": false,
   "limits": {
     "commits": 20,
     "files": 40
   },
   "totals": {
-    "windows": 0,
-    "commits": 0,
-    "files": 0,
+    "windows": 1,
+    "commits": 10,
+    "files": 9,
     "siteFiles": 0,
-    "monitoringFiles": 0
+    "monitoringFiles": 9
   },
-  "windows": []
+  "windows": [
+    {
+      "kind": "duration",
+      "label": "読書機能の所要時間",
+      "source": "reading",
+      "baseTimestamp": "2026-07-25T22:28:26.949Z",
+      "headTimestamp": "2026-07-26T22:32:08.867Z",
+      "baseReportCommit": "d64ea46fb09468f9261bc069d3a94357d9cb98d0",
+      "headReportCommit": "7843c5b77b43cf2d9cba8dc03d0342433e5bf8f0",
+      "baseCommit": "af80cb8f755e27ddeedb45242d38f7879c0e5f65",
+      "headCommit": "efd1951cc06760aca2b5e73e9c3babbc85616207",
+      "commitCount": 10,
+      "commits": [
+        {
+          "sha": "d64ea46fb09468f9261bc069d3a94357d9cb98d0",
+          "date": "2026-07-25T22:32:36Z",
+          "author": "github-actions[bot]",
+          "subject": "chore: record public reading and site health audit"
+        },
+        {
+          "sha": "92ce9e709278c1ff88b459990c18a054605dd697",
+          "date": "2026-07-25T22:32:55Z",
+          "author": "github-actions[bot]",
+          "subject": "chore: update public monitoring summary"
+        },
+        {
+          "sha": "be4ab92a00f68e5b0a6e31424695c93b76903ef2",
+          "date": "2026-07-25T22:35:31Z",
+          "author": "github-actions[bot]",
+          "subject": "chore: record public offline PWA browser audit"
+        },
+        {
+          "sha": "5b79ba42fb7ecbfcba505aa4c421ad6213df3576",
+          "date": "2026-07-25T22:35:47Z",
+          "author": "github-actions[bot]",
+          "subject": "chore: update public monitoring summary"
+        },
+        {
+          "sha": "38797aae9726a978d3bed491d1b948e8ff744712",
+          "date": "2026-07-25T22:36:01Z",
+          "author": "github-actions[bot]",
+          "subject": "chore: update public monitoring summary"
+        },
+        {
+          "sha": "c2322d733f6a65c002027a481a81911f45e77ad5",
+          "date": "2026-07-25T22:58:51Z",
+          "author": "github-actions[bot]",
+          "subject": "chore: record public offline PWA browser audit"
+        },
+        {
+          "sha": "2271349e7d1a16ce5c54f24502e705428ba02fdd",
+          "date": "2026-07-25T22:59:07Z",
+          "author": "github-actions[bot]",
+          "subject": "chore: update public monitoring summary"
+        },
+        {
+          "sha": "2ad126c5c18fcb28c42a4dd1ce18736603a83d1b",
+          "date": "2026-07-25T22:59:22Z",
+          "author": "github-actions[bot]",
+          "subject": "chore: update public monitoring summary"
+        },
+        {
+          "sha": "4b8384f1955fd9e7a0e25bf0e649f19cf63100b7",
+          "date": "2026-07-25T23:29:14Z",
+          "author": "github-actions[bot]",
+          "subject": "chore: update public monitoring summary"
+        },
+        {
+          "sha": "efd1951cc06760aca2b5e73e9c3babbc85616207",
+          "date": "2026-07-26T19:33:48Z",
+          "author": "github-actions[bot]",
+          "subject": "chore: record production live site audit"
+        }
+      ],
+      "commitsTruncated": false,
+      "fileCount": 9,
+      "files": [
+        {
+          "status": "M",
+          "file": "reports/live-offline-audit.md",
+          "monitoring": true
+        },
+        {
+          "status": "M",
+          "file": "reports/live-reader-experience-audit.md",
+          "monitoring": true
+        },
+        {
+          "status": "M",
+          "file": "reports/live-series-pages-audit.md",
+          "monitoring": true
+        },
+        {
+          "status": "M",
+          "file": "reports/live-site-audit.md",
+          "monitoring": true
+        },
+        {
+          "status": "M",
+          "file": "reports/offline-public-browser-audit.md",
+          "monitoring": true
+        },
+        {
+          "status": "M",
+          "file": "reports/public-monitoring-history.json",
+          "monitoring": true
+        },
+        {
+          "status": "M",
+          "file": "reports/public-monitoring-summary.md",
+          "monitoring": true
+        },
+        {
+          "status": "M",
+          "file": "reports/reading-public-browser-audit.md",
+          "monitoring": true
+        },
+        {
+          "status": "M",
+          "file": "reports/site-public-health-audit.md",
+          "monitoring": true
+        }
+      ],
+      "filesTruncated": false,
+      "siteFileCount": 0,
+      "monitoringFileCount": 9,
+      "latestDuration": 76,
+      "medianDuration": 44,
+      "durationRatio": 1.7273
+    }
+  ]
 }
