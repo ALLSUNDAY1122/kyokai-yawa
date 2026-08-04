@@ -1,7 +1,43 @@
 {
   "version": 1,
-  "updatedAt": "2026-08-03T23:34:30.529Z",
+  "updatedAt": "2026-08-04T22:41:18.691Z",
   "entries": [
+    {
+      "kind": "incident-config",
+      "label": "障害Issue通知設定",
+      "source": "public-audit-incident-workflow-audit.md",
+      "executedAt": "2026-08-04T22:41:18.691Z",
+      "status": "passed",
+      "passed": null,
+      "failed": 0,
+      "skipped": null,
+      "warnings": 0,
+      "durationSeconds": null
+    },
+    {
+      "kind": "site-health",
+      "label": "54ページ品質（単独確認）",
+      "source": "site-public-health-audit.md",
+      "executedAt": "2026-08-04T22:40:59.443Z",
+      "status": "passed",
+      "passed": 108,
+      "failed": 0,
+      "skipped": 0,
+      "warnings": 0,
+      "durationSeconds": 187.5
+    },
+    {
+      "kind": "reading",
+      "label": "読書機能・54ページ品質",
+      "source": "reading-public-browser-audit.md",
+      "executedAt": "2026-08-04T22:37:51.287Z",
+      "status": "passed",
+      "passed": 36,
+      "failed": 0,
+      "skipped": 2,
+      "warnings": 0,
+      "durationSeconds": 52.9
+    },
     {
       "kind": "incident-config",
       "label": "障害Issue通知設定",
@@ -565,18 +601,6 @@
       "skipped": 0,
       "warnings": 0,
       "durationSeconds": 21.4
-    },
-    {
-      "kind": "incident-config",
-      "label": "障害Issue通知設定",
-      "source": "public-audit-incident-workflow-audit.md",
-      "executedAt": "2026-07-29T22:34:37.957Z",
-      "status": "passed",
-      "passed": null,
-      "failed": 0,
-      "skipped": null,
-      "warnings": 0,
-      "durationSeconds": null
     },
     {
       "kind": "site-health",
