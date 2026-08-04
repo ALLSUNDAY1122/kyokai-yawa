@@ -1,7 +1,31 @@
 {
   "version": 1,
-  "updatedAt": "2026-08-04T22:41:18.691Z",
+  "updatedAt": "2026-08-04T22:44:01.593Z",
   "entries": [
+    {
+      "kind": "incident-config",
+      "label": "障害Issue通知設定",
+      "source": "public-audit-incident-workflow-audit.md",
+      "executedAt": "2026-08-04T22:44:01.592Z",
+      "status": "passed",
+      "passed": null,
+      "failed": 0,
+      "skipped": null,
+      "warnings": 0,
+      "durationSeconds": null
+    },
+    {
+      "kind": "offline",
+      "label": "オフライン・PWA",
+      "source": "offline-public-browser-audit.md",
+      "executedAt": "2026-08-04T22:43:28.956Z",
+      "status": "passed",
+      "passed": 10,
+      "failed": 0,
+      "skipped": 0,
+      "warnings": 0,
+      "durationSeconds": 20.5
+    },
     {
       "kind": "incident-config",
       "label": "障害Issue通知設定",
@@ -577,18 +601,6 @@
       "skipped": 0,
       "warnings": 0,
       "durationSeconds": 19.4
-    },
-    {
-      "kind": "incident-config",
-      "label": "障害Issue通知設定",
-      "source": "public-audit-incident-workflow-audit.md",
-      "executedAt": "2026-07-29T22:37:15.615Z",
-      "status": "passed",
-      "passed": null,
-      "failed": 0,
-      "skipped": null,
-      "warnings": 0,
-      "durationSeconds": null
     },
     {
       "kind": "offline",
