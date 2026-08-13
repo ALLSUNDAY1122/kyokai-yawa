@@ -1,6 +1,6 @@
 # 境界夜話 公開サイト オフライン・PWA 実ブラウザー監査
 
-- 実行日時: 2026-08-13T22:18:32.366Z
+- 実行日時: 2026-08-13T22:44:35.449Z
 - 実行対象: https://allsunday1122.github.io/kyokai-yawa/
 - 実行環境: chromium-desktop / webkit-mobile
 - 対象操作: Service Worker登録・事前保存・閲覧済み作品再読・未保存ページのオフライン案内・読書記録のオフライン表示・manifest/icon配信
@@ -10,22 +10,22 @@
 - 成功: 10
 - 失敗: 0
 - スキップ: 0
-- 所要時間: 18.6秒
+- 所要時間: 17.0秒
 
 ## ケース別結果
 
 | ブラウザー | テスト | 結果 | 時間 |
 |---|---|---:|---:|
-| chromium-desktop | offline-pwa.spec.mjs › manifestとアプリアイコンが公開されている | passed | 1000ms |
-| chromium-desktop | offline-pwa.spec.mjs › Service Workerが登録され、PWA共通資産を事前保存する | passed | 1512ms |
-| chromium-desktop | offline-pwa.spec.mjs › 一度開いた作品を通信遮断後も本文付きで再読できる | passed | 1130ms |
-| chromium-desktop | offline-pwa.spec.mjs › 未保存の作品は通信遮断時にオフライン案内を表示する | passed | 756ms |
-| chromium-desktop | offline-pwa.spec.mjs › 読書記録ページを未訪問でもオフラインで開ける | passed | 976ms |
-| webkit-mobile | offline-pwa.spec.mjs › manifestとアプリアイコンが公開されている | passed | 1363ms |
-| webkit-mobile | offline-pwa.spec.mjs › Service Workerが登録され、PWA共通資産を事前保存する | passed | 5620ms |
-| webkit-mobile | offline-pwa.spec.mjs › 一度開いた作品を通信遮断後も本文付きで再読できる | passed | 1287ms |
-| webkit-mobile | offline-pwa.spec.mjs › 未保存の作品は通信遮断時にオフライン案内を表示する | passed | 1162ms |
-| webkit-mobile | offline-pwa.spec.mjs › 読書記録ページを未訪問でもオフラインで開ける | passed | 1059ms |
+| chromium-desktop | offline-pwa.spec.mjs › manifestとアプリアイコンが公開されている | passed | 1075ms |
+| chromium-desktop | offline-pwa.spec.mjs › Service Workerが登録され、PWA共通資産を事前保存する | passed | 1856ms |
+| chromium-desktop | offline-pwa.spec.mjs › 一度開いた作品を通信遮断後も本文付きで再読できる | passed | 1123ms |
+| chromium-desktop | offline-pwa.spec.mjs › 未保存の作品は通信遮断時にオフライン案内を表示する | passed | 719ms |
+| chromium-desktop | offline-pwa.spec.mjs › 読書記録ページを未訪問でもオフラインで開ける | passed | 930ms |
+| webkit-mobile | offline-pwa.spec.mjs › manifestとアプリアイコンが公開されている | passed | 2378ms |
+| webkit-mobile | offline-pwa.spec.mjs › Service Workerが登録され、PWA共通資産を事前保存する | passed | 2598ms |
+| webkit-mobile | offline-pwa.spec.mjs › 一度開いた作品を通信遮断後も本文付きで再読できる | passed | 1739ms |
+| webkit-mobile | offline-pwa.spec.mjs › 未保存の作品は通信遮断時にオフライン案内を表示する | passed | 1047ms |
+| webkit-mobile | offline-pwa.spec.mjs › 読書記録ページを未訪問でもオフラインで開ける | passed | 1068ms |
 
 ## エラー
 
