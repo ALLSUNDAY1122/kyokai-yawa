@@ -1,12 +1,12 @@
 # 境界夜話 本番シリーズ専用ページ監査
 
-- 実行日時: 2026-08-21T18:55:15.551Z
+- 実行日時: 2026-08-22T18:48:21.225Z
 - シリーズページ: 4件
 - 関連資産: 2件
 - エラー: 0
 - 警告: 0
-- 応答時間中央値: 8ms
-- 応答時間p95: 86ms
+- 応答時間中央値: 12ms
+- 応答時間p95: 110ms
 
 ## エラー
 
@@ -20,11 +20,11 @@
 
 | 対象 | HTTP | Content-Type | 応答 |
 |---|---:|---|---:|
-| 真壁夜話 | 200 | text/html; charset=utf-8 | 86ms |
-| 黒瀬蒐集録 | 200 | text/html; charset=utf-8 | 6ms |
-| 榊家異聞 | 200 | text/html; charset=utf-8 | 8ms |
-| 境界観測記 | 200 | text/html; charset=utf-8 | 8ms |
-| data/series-pages.css | 200 | text/css; charset=utf-8 | 21ms |
-| data/series-links.js | 200 | application/javascript; charset=utf-8 | 6ms |
-| トップページ | 200 | text/html; charset=utf-8 | 10ms |
-| sitemap.xml | 200 | application/xml | 6ms |
+| 真壁夜話 | 200 | text/html; charset=utf-8 | 110ms |
+| 黒瀬蒐集録 | 200 | text/html; charset=utf-8 | 12ms |
+| 榊家異聞 | 200 | text/html; charset=utf-8 | 11ms |
+| 境界観測記 | 200 | text/html; charset=utf-8 | 12ms |
+| data/series-pages.css | 200 | text/css; charset=utf-8 | 96ms |
+| data/series-links.js | 200 | application/javascript; charset=utf-8 | 9ms |
+| トップページ | 200 | text/html; charset=utf-8 | 13ms |
+| sitemap.xml | 200 | application/xml | 9ms |
