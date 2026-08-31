@@ -1,7 +1,7 @@
 {
   "schema": "kyokai-public-audit-performance-diagnostics-v1",
-  "generatedAt": "2026-08-23T22:11:56.238Z",
-  "performanceGeneratedAt": "2026-08-23T22:11:54.764Z",
+  "generatedAt": "2026-08-31T00:01:54.211Z",
+  "performanceGeneratedAt": "2026-08-31T00:01:52.806Z",
   "breached": false,
   "selfTest": false,
   "limits": {
