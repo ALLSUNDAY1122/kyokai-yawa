@@ -1,19 +1,125 @@
 {
   "schema": "kyokai-public-audit-performance-diagnostics-v1",
-  "generatedAt": "2026-09-28T00:07:14.410Z",
-  "performanceGeneratedAt": "2026-09-28T00:07:12.624Z",
-  "breached": false,
+  "generatedAt": "2026-10-05T00:19:17.110Z",
+  "performanceGeneratedAt": "2026-10-05T00:19:14.524Z",
+  "breached": true,
   "selfTest": false,
   "limits": {
     "commits": 20,
     "files": 40
   },
   "totals": {
-    "windows": 0,
-    "commits": 0,
-    "files": 0,
+    "windows": 1,
+    "commits": 6,
+    "files": 9,
     "siteFiles": 0,
-    "monitoringFiles": 0
+    "monitoringFiles": 9
   },
-  "windows": []
+  "windows": [
+    {
+      "kind": "duration",
+      "label": "オフライン・PWAの所要時間",
+      "source": "offline",
+      "baseTimestamp": "2026-10-04T00:24:22.198Z",
+      "headTimestamp": "2026-10-05T00:11:44.037Z",
+      "baseReportCommit": "5a51bb3a124da59f2597e17afafb33b793d768df",
+      "headReportCommit": "5ba8898dbafdd3b0b8da9dff9ce9ea4d577c2f3d",
+      "baseCommit": "21885a2ea90f63b0ea9ebe33753492c261a10c3b",
+      "headCommit": "b5f4d162a21964e48ee92c260725caa076a67e2f",
+      "commitCount": 6,
+      "commits": [
+        {
+          "sha": "5a51bb3a124da59f2597e17afafb33b793d768df",
+          "date": "2026-10-04T00:24:22Z",
+          "author": "github-actions[bot]",
+          "subject": "chore: record public offline PWA browser audit"
+        },
+        {
+          "sha": "10f30cebe109d0b01855da35deebcbb0fe9ded71",
+          "date": "2026-10-04T00:24:54Z",
+          "author": "github-actions[bot]",
+          "subject": "chore: update public monitoring summary"
+        },
+        {
+          "sha": "43959221732e6ee1f2b19bbbec0d3b4cde607aed",
+          "date": "2026-10-04T01:46:58Z",
+          "author": "github-actions[bot]",
+          "subject": "chore: update public monitoring summary"
+        },
+        {
+          "sha": "362f624d7b56a193184240c2fc0a8bf5b06eb382",
+          "date": "2026-10-04T21:23:34Z",
+          "author": "github-actions[bot]",
+          "subject": "chore: record production live site audit"
+        },
+        {
+          "sha": "bd1321b8cfd1d05346cf4f67bb040b87830931e6",
+          "date": "2026-10-05T00:09:15Z",
+          "author": "github-actions[bot]",
+          "subject": "chore: record public reading and site health audit"
+        },
+        {
+          "sha": "b5f4d162a21964e48ee92c260725caa076a67e2f",
+          "date": "2026-10-05T00:09:33Z",
+          "author": "github-actions[bot]",
+          "subject": "chore: update public monitoring summary"
+        }
+      ],
+      "commitsTruncated": false,
+      "fileCount": 9,
+      "files": [
+        {
+          "status": "M",
+          "file": "reports/live-offline-audit.md",
+          "monitoring": true
+        },
+        {
+          "status": "M",
+          "file": "reports/live-reader-experience-audit.md",
+          "monitoring": true
+        },
+        {
+          "status": "M",
+          "file": "reports/live-series-pages-audit.md",
+          "monitoring": true
+        },
+        {
+          "status": "M",
+          "file": "reports/live-site-audit.md",
+          "monitoring": true
+        },
+        {
+          "status": "M",
+          "file": "reports/offline-public-browser-audit.md",
+          "monitoring": true
+        },
+        {
+          "status": "M",
+          "file": "reports/public-monitoring-history.json",
+          "monitoring": true
+        },
+        {
+          "status": "M",
+          "file": "reports/public-monitoring-summary.md",
+          "monitoring": true
+        },
+        {
+          "status": "M",
+          "file": "reports/reading-public-browser-audit.md",
+          "monitoring": true
+        },
+        {
+          "status": "M",
+          "file": "reports/site-public-health-audit.md",
+          "monitoring": true
+        }
+      ],
+      "filesTruncated": false,
+      "siteFileCount": 0,
+      "monitoringFileCount": 9,
+      "latestDuration": 25.6,
+      "medianDuration": 15.8,
+      "durationRatio": 1.6203
+    }
+  ]
 }

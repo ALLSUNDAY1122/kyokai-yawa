@@ -1,18 +1,18 @@
 {
   "schema": "kyokai-public-audit-performance-v1",
-  "generatedAt": "2026-09-28T00:07:12.624Z",
-  "periodStart": "2026-09-21T00:07:12.624Z",
-  "periodEnd": "2026-09-28T00:07:12.624Z",
+  "generatedAt": "2026-10-05T00:19:14.524Z",
+  "periodStart": "2026-09-28T00:19:14.524Z",
+  "periodEnd": "2026-10-05T00:19:14.524Z",
   "periodDays": 7,
   "thresholds": {
     "durationRatio": 1.5,
     "retryRate": 0.25
   },
   "totals": {
-    "runs": 27,
-    "retryRuns": 0,
-    "retries": 0,
-    "retryRate": 0,
+    "runs": 28,
+    "retryRuns": 1,
+    "retries": 1,
+    "retryRate": 0.0357,
     "retryDegraded": false
   },
   "sources": [
@@ -20,11 +20,11 @@
       "key": "reading",
       "label": "読書機能",
       "runs": 7,
-      "latestTimestamp": "2026-09-27T23:53:26.815Z",
-      "latestCommit": "78fe50b4a577332466bffd4db097316497ab4f56",
-      "latestDuration": 31.6,
-      "medianDuration": 46,
-      "durationRatio": 0.687,
+      "latestTimestamp": "2026-10-05T00:05:15.120Z",
+      "latestCommit": "bd1321b8cfd1d05346cf4f67bb040b87830931e6",
+      "latestDuration": 56,
+      "medianDuration": 51.4,
+      "durationRatio": 1.0895,
       "durationDegraded": false,
       "retryRuns": 0,
       "retryRate": 0
@@ -33,29 +33,31 @@
       "key": "health",
       "label": "アクセシビリティ・実行時品質",
       "runs": 7,
-      "latestTimestamp": "2026-09-27T23:56:21.623Z",
-      "latestCommit": "78fe50b4a577332466bffd4db097316497ab4f56",
-      "latestDuration": 174.2,
-      "medianDuration": 232.6,
-      "durationRatio": 0.7489,
+      "latestTimestamp": "2026-10-05T00:09:13.618Z",
+      "latestCommit": "bd1321b8cfd1d05346cf4f67bb040b87830931e6",
+      "latestDuration": 237.3,
+      "medianDuration": 243.2,
+      "durationRatio": 0.9757,
       "durationDegraded": false,
-      "retryRuns": 0,
-      "retryRate": 0
+      "retryRuns": 1,
+      "retryRate": 0.1429
     },
     {
       "key": "offline",
       "label": "オフライン・PWA",
-      "runs": 13,
-      "latestTimestamp": "2026-09-27T23:59:37.511Z",
-      "latestCommit": "3ef1dfbd1168cab810e78a869cd5d724c32d8442",
-      "latestDuration": 24.7,
-      "medianDuration": 18.7,
-      "durationRatio": 1.3209,
-      "durationDegraded": false,
+      "runs": 14,
+      "latestTimestamp": "2026-10-05T00:11:44.037Z",
+      "latestCommit": "5ba8898dbafdd3b0b8da9dff9ce9ea4d577c2f3d",
+      "latestDuration": 25.6,
+      "medianDuration": 15.8,
+      "durationRatio": 1.6203,
+      "durationDegraded": true,
       "retryRuns": 0,
       "retryRate": 0
     }
   ],
-  "breached": false,
-  "reasons": []
+  "breached": true,
+  "reasons": [
+    "オフライン・PWA: 最新25.6秒が7日中央値15.8秒の1.62倍です"
+  ]
 }
