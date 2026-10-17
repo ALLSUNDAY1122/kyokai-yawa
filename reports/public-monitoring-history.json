@@ -1,7 +1,31 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-17T23:26:43.590Z",
+  "updatedAt": "2026-10-17T23:52:06.668Z",
   "entries": [
+    {
+      "kind": "incident-config",
+      "label": "障害Issue通知設定",
+      "source": "public-audit-incident-workflow-audit.md",
+      "executedAt": "2026-10-17T23:52:06.667Z",
+      "status": "passed",
+      "passed": null,
+      "failed": 0,
+      "skipped": null,
+      "warnings": 0,
+      "durationSeconds": null
+    },
+    {
+      "kind": "offline",
+      "label": "オフライン・PWA",
+      "source": "offline-public-browser-audit.md",
+      "executedAt": "2026-10-17T23:51:34.625Z",
+      "status": "passed",
+      "passed": 10,
+      "failed": 0,
+      "skipped": 0,
+      "warnings": 0,
+      "durationSeconds": 15.8
+    },
     {
       "kind": "incident-config",
       "label": "障害Issue通知設定",
@@ -579,18 +603,6 @@
       "durationSeconds": null
     },
     {
-      "kind": "incident-config",
-      "label": "障害Issue通知設定",
-      "source": "public-audit-incident-workflow-audit.md",
-      "executedAt": "2026-10-13T02:54:55.611Z",
-      "status": "passed",
-      "passed": null,
-      "failed": 0,
-      "skipped": null,
-      "warnings": 0,
-      "durationSeconds": null
-    },
-    {
       "kind": "offline",
       "label": "オフライン・PWA",
       "source": "offline-public-browser-audit.md",
@@ -1069,18 +1081,6 @@
       "skipped": 2,
       "warnings": 0,
       "durationSeconds": 40.7
-    },
-    {
-      "kind": "offline",
-      "label": "オフライン・PWA",
-      "source": "offline-public-browser-audit.md",
-      "executedAt": "2026-10-03T01:00:04.566Z",
-      "status": "passed",
-      "passed": 10,
-      "failed": 0,
-      "skipped": 0,
-      "warnings": 0,
-      "durationSeconds": 18.8
     },
     {
       "kind": "site-health",
