@@ -1,14 +1,14 @@
 # 境界夜話 本番配信監査
 
-- 実行日時: 2026-10-17T20:35:18.570Z
+- 実行日時: 2026-10-18T20:40:56.698Z
 - HTML確認: 49ページ
 - 公開資産確認: 38件
 - アイコン・manifest本番確認: 5件
 - エラー: 0
 - 警告: 0
-- 応答時間中央値: 65ms
-- 応答時間p95: 108ms
-- 最大応答時間: 232ms
+- 応答時間中央値: 88ms
+- 応答時間p95: 120ms
+- 最大応答時間: 235ms
 
 ## エラー
 
@@ -22,93 +22,93 @@
 
 | 対象 | HTTP | Content-Type | Cache-Control | ETag | Last-Modified | Encoding | 応答 |
 |---|---:|---|---|---|---|---|---:|
-| TOP | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad2c3ff-1efec" | Sat, 17 Oct 2026 00:40:31 GMT | gzip | 232ms |
-| MKB-001 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad2c3ff-472f" | Sat, 17 Oct 2026 00:40:31 GMT | gzip | 95ms |
-| MKB-002 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad2c3ff-4465" | Sat, 17 Oct 2026 00:40:31 GMT | gzip | 81ms |
-| MKB-003 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad2c3ff-4203" | Sat, 17 Oct 2026 00:40:31 GMT | gzip | 183ms |
-| MKB-004 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad2c3ff-439c" | Sat, 17 Oct 2026 00:40:31 GMT | gzip | 92ms |
-| MKB-005 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad2c3ff-4288" | Sat, 17 Oct 2026 00:40:31 GMT | gzip | 73ms |
-| MKB-006 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad2c3ff-45c3" | Sat, 17 Oct 2026 00:40:31 GMT | gzip | 77ms |
-| MKB-007 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad2c3ff-38fa" | Sat, 17 Oct 2026 00:40:31 GMT | gzip | 60ms |
-| MKB-008 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad2c3ff-3c4d" | Sat, 17 Oct 2026 00:40:31 GMT | gzip | 73ms |
-| MKB-009 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad2c3ff-3d88" | Sat, 17 Oct 2026 00:40:31 GMT | gzip | 68ms |
-| MKB-010 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad2c3ff-3b2f" | Sat, 17 Oct 2026 00:40:31 GMT | gzip | 62ms |
-| MKB-011 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad2c3ff-39f5" | Sat, 17 Oct 2026 00:40:31 GMT | gzip | 61ms |
-| MKB-012 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad2c3ff-3a60" | Sat, 17 Oct 2026 00:40:31 GMT | gzip | 79ms |
-| KRS-001 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad2c3ff-50db" | Sat, 17 Oct 2026 00:40:31 GMT | gzip | 62ms |
-| KRS-002 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad2c3ff-5daf" | Sat, 17 Oct 2026 00:40:31 GMT | gzip | 64ms |
-| KRS-003 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad2c3ff-5dae" | Sat, 17 Oct 2026 00:40:31 GMT | gzip | 65ms |
-| KRS-004 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad2c3ff-625d" | Sat, 17 Oct 2026 00:40:31 GMT | gzip | 61ms |
-| KRS-005 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad2c3ff-4dc6" | Sat, 17 Oct 2026 00:40:31 GMT | gzip | 68ms |
-| KRS-006 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad2c3ff-567b" | Sat, 17 Oct 2026 00:40:31 GMT | gzip | 78ms |
-| KRS-007 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad2c3ff-4b68" | Sat, 17 Oct 2026 00:40:31 GMT | gzip | 80ms |
-| KRS-008 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad2c3ff-47c8" | Sat, 17 Oct 2026 00:40:31 GMT | gzip | 64ms |
-| KRS-009 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad2c3ff-5004" | Sat, 17 Oct 2026 00:40:31 GMT | gzip | 60ms |
-| KRS-010 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad2c3ff-5232" | Sat, 17 Oct 2026 00:40:31 GMT | gzip | 72ms |
-| KRS-011 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad2c3ff-38cb" | Sat, 17 Oct 2026 00:40:31 GMT | gzip | 60ms |
-| KRS-012 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad2c3ff-4fb8" | Sat, 17 Oct 2026 00:40:31 GMT | gzip | 62ms |
-| SKK-001 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad2c3ff-4e66" | Sat, 17 Oct 2026 00:40:31 GMT | gzip | 76ms |
-| SKK-002 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad2c3ff-5f02" | Sat, 17 Oct 2026 00:40:31 GMT | gzip | 64ms |
-| SKK-003 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad2c3ff-51a3" | Sat, 17 Oct 2026 00:40:31 GMT | gzip | 66ms |
-| SKK-004 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad2c3ff-5019" | Sat, 17 Oct 2026 00:40:31 GMT | gzip | 69ms |
-| SKK-005 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad2c3ff-51b1" | Sat, 17 Oct 2026 00:40:31 GMT | gzip | 67ms |
-| SKK-006 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad2c3ff-4fee" | Sat, 17 Oct 2026 00:40:31 GMT | gzip | 78ms |
-| SKK-007 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad2c3ff-53c2" | Sat, 17 Oct 2026 00:40:31 GMT | gzip | 62ms |
-| SKK-008 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad2c3ff-50bf" | Sat, 17 Oct 2026 00:40:31 GMT | gzip | 74ms |
-| SKK-009 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad2c3ff-53b6" | Sat, 17 Oct 2026 00:40:31 GMT | gzip | 57ms |
-| SKK-010 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad2c3ff-5f86" | Sat, 17 Oct 2026 00:40:31 GMT | gzip | 58ms |
-| SKK-011 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad2c3ff-50bc" | Sat, 17 Oct 2026 00:40:31 GMT | gzip | 172ms |
-| SKK-012 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad2c3ff-586a" | Sat, 17 Oct 2026 00:40:31 GMT | gzip | 68ms |
-| KKS-S1E01 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad2c3ff-6174" | Sat, 17 Oct 2026 00:40:31 GMT | gzip | 181ms |
-| KKS-S1E02 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad2c3ff-602b" | Sat, 17 Oct 2026 00:40:31 GMT | gzip | 69ms |
-| KKS-S1E03 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad2c3ff-5a65" | Sat, 17 Oct 2026 00:40:31 GMT | gzip | 63ms |
-| KKS-S1E04 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad2c3ff-58e4" | Sat, 17 Oct 2026 00:40:31 GMT | gzip | 63ms |
-| KKS-S1E05 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad2c3ff-6877" | Sat, 17 Oct 2026 00:40:31 GMT | gzip | 66ms |
-| KKS-S1E06 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad2c3ff-6a98" | Sat, 17 Oct 2026 00:40:31 GMT | gzip | 64ms |
-| KKS-S1E07 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad2c3ff-4975" | Sat, 17 Oct 2026 00:40:31 GMT | gzip | 65ms |
-| KKS-S1E08 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad2c3ff-525f" | Sat, 17 Oct 2026 00:40:31 GMT | gzip | 69ms |
-| KKS-S1E09 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad2c3ff-42a2" | Sat, 17 Oct 2026 00:40:31 GMT | gzip | 61ms |
-| KKS-S1E10 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad2c3ff-4171" | Sat, 17 Oct 2026 00:40:31 GMT | gzip | 61ms |
-| KKS-S1E11 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad2c3ff-4058" | Sat, 17 Oct 2026 00:40:31 GMT | gzip | 60ms |
-| KKS-S1E12 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad2c3ff-47d9" | Sat, 17 Oct 2026 00:40:31 GMT | gzip | 82ms |
-| assets/app-icon-192.png | 200 | image/png | max-age=600 | "6ad2c3ff-d3d" | Sat, 17 Oct 2026 00:40:31 GMT | - | 68ms |
-| assets/app-icon-512.png | 200 | image/png | max-age=600 | "6ad2c3ff-238f" | Sat, 17 Oct 2026 00:40:31 GMT | - | 108ms |
-| assets/app-icon.svg | 200 | image/svg+xml | max-age=600 | W/"6ad2c3ff-38c" | Sat, 17 Oct 2026 00:40:31 GMT | gzip | 62ms |
-| assets/apple-touch-icon.png | 200 | image/png | max-age=600 | "6ad2c3ff-c96" | Sat, 17 Oct 2026 00:40:31 GMT | - | 65ms |
-| assets/social-card.png | 200 | image/png | max-age=600 | "6ad2c3ff-f422" | Sat, 17 Oct 2026 00:40:31 GMT | - | 65ms |
-| data/archive-tools.js | 200 | application/javascript; charset=utf-8 | max-age=600 | W/"6ad2c3ff-361f" | Sat, 17 Oct 2026 00:40:31 GMT | gzip | 65ms |
-| data/entry-guide.css | 200 | text/css; charset=utf-8 | max-age=600 | W/"6ad2c3ff-97f" | Sat, 17 Oct 2026 00:40:31 GMT | gzip | 65ms |
-| data/home-personalization.css | 200 | text/css; charset=utf-8 | max-age=600 | W/"6ad2c3ff-8ce" | Sat, 17 Oct 2026 00:40:31 GMT | gzip | 58ms |
-| data/home-personalization.js | 200 | application/javascript; charset=utf-8 | max-age=600 | W/"6ad2c3ff-27c3" | Sat, 17 Oct 2026 00:40:31 GMT | gzip | 63ms |
-| data/reader-tools.css | 200 | text/css; charset=utf-8 | max-age=600 | W/"6ad2c3ff-bd9" | Sat, 17 Oct 2026 00:40:31 GMT | gzip | 59ms |
-| data/reader-tools.js | 200 | application/javascript; charset=utf-8 | max-age=600 | W/"6ad2c3ff-1847" | Sat, 17 Oct 2026 00:40:31 GMT | gzip | 60ms |
-| data/reading-paths.css | 200 | text/css; charset=utf-8 | max-age=600 | W/"6ad2c3ff-a11" | Sat, 17 Oct 2026 00:40:31 GMT | gzip | 58ms |
-| data/reading-status.css | 200 | text/css; charset=utf-8 | max-age=600 | W/"6ad2c3ff-dba" | Sat, 17 Oct 2026 00:40:31 GMT | gzip | 64ms |
-| data/reading-status.js | 200 | application/javascript; charset=utf-8 | max-age=600 | W/"6ad2c3ff-2634" | Sat, 17 Oct 2026 00:40:31 GMT | gzip | 71ms |
-| data/related-stories.css | 200 | text/css; charset=utf-8 | max-age=600 | W/"6ad2c3ff-843" | Sat, 17 Oct 2026 00:40:31 GMT | gzip | 64ms |
-| data/saved-stories.css | 200 | text/css; charset=utf-8 | max-age=600 | W/"6ad2c3ff-4c4" | Sat, 17 Oct 2026 00:40:31 GMT | gzip | 65ms |
-| data/saved-stories.js | 200 | application/javascript; charset=utf-8 | max-age=600 | W/"6ad2c3ff-135f" | Sat, 17 Oct 2026 00:40:31 GMT | gzip | 66ms |
-| data/series-links.js | 200 | application/javascript; charset=utf-8 | max-age=600 | W/"6ad2c3ff-50e" | Sat, 17 Oct 2026 00:40:31 GMT | gzip | 60ms |
-| data/story-nav.js | 200 | application/javascript; charset=utf-8 | max-age=600 | W/"6ad2c3ff-ad1" | Sat, 17 Oct 2026 00:40:31 GMT | gzip | 67ms |
-| data/story-overview.css | 200 | text/css; charset=utf-8 | max-age=600 | W/"6ad2c3ff-b6b" | Sat, 17 Oct 2026 00:40:31 GMT | gzip | 80ms |
-| data/story-style-2ba104e3db77.css | 200 | text/css; charset=utf-8 | max-age=600 | W/"6ad2c3ff-ccc" | Sat, 17 Oct 2026 00:40:31 GMT | gzip | 62ms |
-| data/story-style-75fc2972955b.css | 200 | text/css; charset=utf-8 | max-age=600 | W/"6ad2c3ff-c57" | Sat, 17 Oct 2026 00:40:31 GMT | gzip | 61ms |
-| data/story-style-7a1c1c9dc9d5.css | 200 | text/css; charset=utf-8 | max-age=600 | W/"6ad2c3ff-c4a" | Sat, 17 Oct 2026 00:40:31 GMT | gzip | 65ms |
-| data/story-style-bd1b211af438.css | 200 | text/css; charset=utf-8 | max-age=600 | W/"6ad2c3ff-c53" | Sat, 17 Oct 2026 00:40:31 GMT | gzip | 59ms |
-| data/story-style-bf1f39524cf2.css | 200 | text/css; charset=utf-8 | max-age=600 | W/"6ad2c3ff-cd6" | Sat, 17 Oct 2026 00:40:31 GMT | gzip | 76ms |
-| data/sw-register.js | 200 | application/javascript; charset=utf-8 | max-age=600 | W/"6ad2c3ff-405" | Sat, 17 Oct 2026 00:40:31 GMT | gzip | 68ms |
-| data/work-cards.css | 200 | text/css; charset=utf-8 | max-age=600 | W/"6ad2c3ff-a29" | Sat, 17 Oct 2026 00:40:31 GMT | gzip | 63ms |
-| data/works.js | 200 | application/javascript; charset=utf-8 | max-age=600 | W/"6ad2c3ff-3cc3" | Sat, 17 Oct 2026 00:40:31 GMT | gzip | 60ms |
-| feed.xml | 200 | application/xml | max-age=600 | W/"6ad2c3ff-68d0" | Sat, 17 Oct 2026 00:40:31 GMT | gzip | 61ms |
-| manifest.webmanifest | 200 | application/manifest+json; charset=utf-8 | max-age=600 | W/"6ad2c3ff-2da" | Sat, 17 Oct 2026 00:40:31 GMT | gzip | 83ms |
-| reading-log.html | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad2c3ff-1b7e" | Sat, 17 Oct 2026 00:40:31 GMT | gzip | 65ms |
-| robots.txt | 200 | text/plain; charset=utf-8 | max-age=600 | "6ad2c3ff-59" | Sat, 17 Oct 2026 00:40:31 GMT | - | 67ms |
-| series/kansoku.html | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad2c3ff-743e" | Sat, 17 Oct 2026 00:40:31 GMT | gzip | 70ms |
-| series/kurose.html | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad2c3ff-7297" | Sat, 17 Oct 2026 00:40:31 GMT | gzip | 69ms |
-| series/makabe.html | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad2c3ff-720d" | Sat, 17 Oct 2026 00:40:31 GMT | gzip | 79ms |
-| series/sakaki.html | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad2c3ff-71b3" | Sat, 17 Oct 2026 00:40:31 GMT | gzip | 62ms |
-| sitemap.xml | 200 | application/xml | max-age=600 | W/"6ad2c3ff-1d1e" | Sat, 17 Oct 2026 00:40:31 GMT | gzip | 62ms |
-| status.html | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad2c3ff-f9c" | Sat, 17 Oct 2026 00:40:31 GMT | gzip | 63ms |
+| TOP | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad40e09-1efec" | Sun, 18 Oct 2026 00:08:41 GMT | gzip | 235ms |
+| MKB-001 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad40e09-472f" | Sun, 18 Oct 2026 00:08:41 GMT | gzip | 117ms |
+| MKB-002 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad40e09-4465" | Sun, 18 Oct 2026 00:08:41 GMT | gzip | 122ms |
+| MKB-003 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad40e09-4203" | Sun, 18 Oct 2026 00:08:41 GMT | gzip | 101ms |
+| MKB-004 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad40e09-439c" | Sun, 18 Oct 2026 00:08:41 GMT | gzip | 93ms |
+| MKB-005 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad40e09-4288" | Sun, 18 Oct 2026 00:08:41 GMT | gzip | 99ms |
+| MKB-006 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad40e09-45c3" | Sun, 18 Oct 2026 00:08:41 GMT | gzip | 107ms |
+| MKB-007 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad40e09-38fa" | Sun, 18 Oct 2026 00:08:41 GMT | gzip | 88ms |
+| MKB-008 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad40e09-3c4d" | Sun, 18 Oct 2026 00:08:41 GMT | gzip | 97ms |
+| MKB-009 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad40e09-3d88" | Sun, 18 Oct 2026 00:08:41 GMT | gzip | 84ms |
+| MKB-010 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad40e09-3b2f" | Sun, 18 Oct 2026 00:08:41 GMT | gzip | 109ms |
+| MKB-011 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad40e09-39f5" | Sun, 18 Oct 2026 00:08:41 GMT | gzip | 98ms |
+| MKB-012 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad40e09-3a60" | Sun, 18 Oct 2026 00:08:41 GMT | gzip | 86ms |
+| KRS-001 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad40e09-50db" | Sun, 18 Oct 2026 00:08:41 GMT | gzip | 93ms |
+| KRS-002 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad40e09-5daf" | Sun, 18 Oct 2026 00:08:41 GMT | gzip | 106ms |
+| KRS-003 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad40e09-5dae" | Sun, 18 Oct 2026 00:08:41 GMT | gzip | 106ms |
+| KRS-004 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad40e09-625d" | Sun, 18 Oct 2026 00:08:41 GMT | gzip | 103ms |
+| KRS-005 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad40e09-4dc6" | Sun, 18 Oct 2026 00:08:41 GMT | gzip | 87ms |
+| KRS-006 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad40e09-567b" | Sun, 18 Oct 2026 00:08:41 GMT | gzip | 87ms |
+| KRS-007 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad40e09-4b68" | Sun, 18 Oct 2026 00:08:41 GMT | gzip | 102ms |
+| KRS-008 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad40e09-47c8" | Sun, 18 Oct 2026 00:08:41 GMT | gzip | 92ms |
+| KRS-009 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad40e09-5004" | Sun, 18 Oct 2026 00:08:41 GMT | gzip | 91ms |
+| KRS-010 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad40e09-5232" | Sun, 18 Oct 2026 00:08:41 GMT | gzip | 90ms |
+| KRS-011 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad40e09-38cb" | Sun, 18 Oct 2026 00:08:41 GMT | gzip | 91ms |
+| KRS-012 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad40e09-4fb8" | Sun, 18 Oct 2026 00:08:41 GMT | gzip | 81ms |
+| SKK-001 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad40e09-4e66" | Sun, 18 Oct 2026 00:08:41 GMT | gzip | 92ms |
+| SKK-002 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad40e09-5f02" | Sun, 18 Oct 2026 00:08:41 GMT | gzip | 102ms |
+| SKK-003 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad40e09-51a3" | Sun, 18 Oct 2026 00:08:41 GMT | gzip | 120ms |
+| SKK-004 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad40e09-5019" | Sun, 18 Oct 2026 00:08:41 GMT | gzip | 88ms |
+| SKK-005 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad40e09-51b1" | Sun, 18 Oct 2026 00:08:41 GMT | gzip | 91ms |
+| SKK-006 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad40e09-4fee" | Sun, 18 Oct 2026 00:08:41 GMT | gzip | 84ms |
+| SKK-007 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad40e09-53c2" | Sun, 18 Oct 2026 00:08:41 GMT | gzip | 100ms |
+| SKK-008 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad40e09-50bf" | Sun, 18 Oct 2026 00:08:41 GMT | gzip | 86ms |
+| SKK-009 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad40e09-53b6" | Sun, 18 Oct 2026 00:08:41 GMT | gzip | 87ms |
+| SKK-010 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad40e09-5f86" | Sun, 18 Oct 2026 00:08:41 GMT | gzip | 88ms |
+| SKK-011 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad40e09-50bc" | Sun, 18 Oct 2026 00:08:41 GMT | gzip | 113ms |
+| SKK-012 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad40e09-586a" | Sun, 18 Oct 2026 00:08:41 GMT | gzip | 82ms |
+| KKS-S1E01 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad40e09-6174" | Sun, 18 Oct 2026 00:08:41 GMT | gzip | 85ms |
+| KKS-S1E02 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad40e09-602b" | Sun, 18 Oct 2026 00:08:41 GMT | gzip | 88ms |
+| KKS-S1E03 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad40e09-5a65" | Sun, 18 Oct 2026 00:08:41 GMT | gzip | 93ms |
+| KKS-S1E04 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad40e09-58e4" | Sun, 18 Oct 2026 00:08:41 GMT | gzip | 90ms |
+| KKS-S1E05 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad40e09-6877" | Sun, 18 Oct 2026 00:08:41 GMT | gzip | 85ms |
+| KKS-S1E06 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad40e09-6a98" | Sun, 18 Oct 2026 00:08:41 GMT | gzip | 87ms |
+| KKS-S1E07 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad40e09-4975" | Sun, 18 Oct 2026 00:08:41 GMT | gzip | 88ms |
+| KKS-S1E08 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad40e09-525f" | Sun, 18 Oct 2026 00:08:41 GMT | gzip | 85ms |
+| KKS-S1E09 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad40e09-42a2" | Sun, 18 Oct 2026 00:08:41 GMT | gzip | 101ms |
+| KKS-S1E10 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad40e09-4171" | Sun, 18 Oct 2026 00:08:41 GMT | gzip | 83ms |
+| KKS-S1E11 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad40e09-4058" | Sun, 18 Oct 2026 00:08:41 GMT | gzip | 83ms |
+| KKS-S1E12 | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad40e09-47d9" | Sun, 18 Oct 2026 00:08:41 GMT | gzip | 83ms |
+| assets/app-icon-192.png | 200 | image/png | max-age=600 | "6ad40e09-d3d" | Sun, 18 Oct 2026 00:08:41 GMT | - | 86ms |
+| assets/app-icon-512.png | 200 | image/png | max-age=600 | "6ad40e09-238f" | Sun, 18 Oct 2026 00:08:41 GMT | - | 110ms |
+| assets/app-icon.svg | 200 | image/svg+xml | max-age=600 | W/"6ad40e09-38c" | Sun, 18 Oct 2026 00:08:41 GMT | gzip | 85ms |
+| assets/apple-touch-icon.png | 200 | image/png | max-age=600 | "6ad40e09-c96" | Sun, 18 Oct 2026 00:08:41 GMT | - | 86ms |
+| assets/social-card.png | 200 | image/png | max-age=600 | "6ad40e09-f422" | Sun, 18 Oct 2026 00:08:41 GMT | - | 94ms |
+| data/archive-tools.js | 200 | application/javascript; charset=utf-8 | max-age=600 | W/"6ad40e09-361f" | Sun, 18 Oct 2026 00:08:41 GMT | gzip | 84ms |
+| data/entry-guide.css | 200 | text/css; charset=utf-8 | max-age=600 | W/"6ad40e09-97f" | Sun, 18 Oct 2026 00:08:41 GMT | gzip | 91ms |
+| data/home-personalization.css | 200 | text/css; charset=utf-8 | max-age=600 | W/"6ad40e09-8ce" | Sun, 18 Oct 2026 00:08:41 GMT | gzip | 91ms |
+| data/home-personalization.js | 200 | application/javascript; charset=utf-8 | max-age=600 | W/"6ad40e09-27c3" | Sun, 18 Oct 2026 00:08:41 GMT | gzip | 124ms |
+| data/reader-tools.css | 200 | text/css; charset=utf-8 | max-age=600 | W/"6ad40e09-bd9" | Sun, 18 Oct 2026 00:08:41 GMT | gzip | 85ms |
+| data/reader-tools.js | 200 | application/javascript; charset=utf-8 | max-age=600 | W/"6ad40e09-1847" | Sun, 18 Oct 2026 00:08:41 GMT | gzip | 86ms |
+| data/reading-paths.css | 200 | text/css; charset=utf-8 | max-age=600 | W/"6ad40e09-a11" | Sun, 18 Oct 2026 00:08:41 GMT | gzip | 84ms |
+| data/reading-status.css | 200 | text/css; charset=utf-8 | max-age=600 | W/"6ad40e09-dba" | Sun, 18 Oct 2026 00:08:41 GMT | gzip | 87ms |
+| data/reading-status.js | 200 | application/javascript; charset=utf-8 | max-age=600 | W/"6ad40e09-2634" | Sun, 18 Oct 2026 00:08:41 GMT | gzip | 83ms |
+| data/related-stories.css | 200 | text/css; charset=utf-8 | max-age=600 | W/"6ad40e09-843" | Sun, 18 Oct 2026 00:08:41 GMT | gzip | 88ms |
+| data/saved-stories.css | 200 | text/css; charset=utf-8 | max-age=600 | W/"6ad40e09-4c4" | Sun, 18 Oct 2026 00:08:41 GMT | gzip | 82ms |
+| data/saved-stories.js | 200 | application/javascript; charset=utf-8 | max-age=600 | W/"6ad40e09-135f" | Sun, 18 Oct 2026 00:08:41 GMT | gzip | 84ms |
+| data/series-links.js | 200 | application/javascript; charset=utf-8 | max-age=600 | W/"6ad40e09-50e" | Sun, 18 Oct 2026 00:08:41 GMT | gzip | 91ms |
+| data/story-nav.js | 200 | application/javascript; charset=utf-8 | max-age=600 | W/"6ad40e09-ad1" | Sun, 18 Oct 2026 00:08:41 GMT | gzip | 143ms |
+| data/story-overview.css | 200 | text/css; charset=utf-8 | max-age=600 | W/"6ad40e09-b6b" | Sun, 18 Oct 2026 00:08:41 GMT | gzip | 85ms |
+| data/story-style-2ba104e3db77.css | 200 | text/css; charset=utf-8 | max-age=600 | W/"6ad40e09-ccc" | Sun, 18 Oct 2026 00:08:41 GMT | gzip | 84ms |
+| data/story-style-75fc2972955b.css | 200 | text/css; charset=utf-8 | max-age=600 | W/"6ad40e09-c57" | Sun, 18 Oct 2026 00:08:41 GMT | gzip | 90ms |
+| data/story-style-7a1c1c9dc9d5.css | 200 | text/css; charset=utf-8 | max-age=600 | W/"6ad40e09-c4a" | Sun, 18 Oct 2026 00:08:41 GMT | gzip | 86ms |
+| data/story-style-bd1b211af438.css | 200 | text/css; charset=utf-8 | max-age=600 | W/"6ad40e09-c53" | Sun, 18 Oct 2026 00:08:41 GMT | gzip | 91ms |
+| data/story-style-bf1f39524cf2.css | 200 | text/css; charset=utf-8 | max-age=600 | W/"6ad40e09-cd6" | Sun, 18 Oct 2026 00:08:41 GMT | gzip | 84ms |
+| data/sw-register.js | 200 | application/javascript; charset=utf-8 | max-age=600 | W/"6ad40e09-405" | Sun, 18 Oct 2026 00:08:41 GMT | gzip | 85ms |
+| data/work-cards.css | 200 | text/css; charset=utf-8 | max-age=600 | W/"6ad40e09-a29" | Sun, 18 Oct 2026 00:08:41 GMT | gzip | 89ms |
+| data/works.js | 200 | application/javascript; charset=utf-8 | max-age=600 | W/"6ad40e09-3cc3" | Sun, 18 Oct 2026 00:08:41 GMT | gzip | 92ms |
+| feed.xml | 200 | application/xml | max-age=600 | W/"6ad40e09-68d0" | Sun, 18 Oct 2026 00:08:41 GMT | gzip | 82ms |
+| manifest.webmanifest | 200 | application/manifest+json; charset=utf-8 | max-age=600 | W/"6ad40e09-2da" | Sun, 18 Oct 2026 00:08:41 GMT | gzip | 104ms |
+| reading-log.html | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad40e09-1b7e" | Sun, 18 Oct 2026 00:08:41 GMT | gzip | 88ms |
+| robots.txt | 200 | text/plain; charset=utf-8 | max-age=600 | "6ad40e09-59" | Sun, 18 Oct 2026 00:08:41 GMT | - | 85ms |
+| series/kansoku.html | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad40e09-743e" | Sun, 18 Oct 2026 00:08:41 GMT | gzip | 88ms |
+| series/kurose.html | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad40e09-7297" | Sun, 18 Oct 2026 00:08:41 GMT | gzip | 93ms |
+| series/makabe.html | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad40e09-720d" | Sun, 18 Oct 2026 00:08:41 GMT | gzip | 89ms |
+| series/sakaki.html | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad40e09-71b3" | Sun, 18 Oct 2026 00:08:41 GMT | gzip | 104ms |
+| sitemap.xml | 200 | application/xml | max-age=600 | W/"6ad40e09-1d1e" | Sun, 18 Oct 2026 00:08:41 GMT | gzip | 85ms |
+| status.html | 200 | text/html; charset=utf-8 | max-age=600 | W/"6ad40e09-f9c" | Sun, 18 Oct 2026 00:08:41 GMT | gzip | 86ms |
 
 ## 集計
 
