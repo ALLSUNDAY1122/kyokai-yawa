@@ -1,7 +1,31 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-28T00:46:30.982Z",
+  "updatedAt": "2026-10-28T01:02:35.661Z",
   "entries": [
+    {
+      "kind": "incident-config",
+      "label": "障害Issue通知設定",
+      "source": "public-audit-incident-workflow-audit.md",
+      "executedAt": "2026-10-28T01:02:35.661Z",
+      "status": "passed",
+      "passed": null,
+      "failed": 0,
+      "skipped": null,
+      "warnings": 0,
+      "durationSeconds": null
+    },
+    {
+      "kind": "offline",
+      "label": "オフライン・PWA",
+      "source": "offline-public-browser-audit.md",
+      "executedAt": "2026-10-28T01:02:16.695Z",
+      "status": "passed",
+      "passed": 10,
+      "failed": 0,
+      "skipped": 0,
+      "warnings": 0,
+      "durationSeconds": 22.2
+    },
     {
       "kind": "incident-config",
       "label": "障害Issue通知設定",
@@ -579,18 +603,6 @@
       "durationSeconds": null
     },
     {
-      "kind": "incident-config",
-      "label": "障害Issue通知設定",
-      "source": "public-audit-incident-workflow-audit.md",
-      "executedAt": "2026-10-23T00:47:33.826Z",
-      "status": "passed",
-      "passed": null,
-      "failed": 0,
-      "skipped": null,
-      "warnings": 0,
-      "durationSeconds": null
-    },
-    {
       "kind": "site-health",
       "label": "54ページ品質（単独確認）",
       "source": "site-public-health-audit.md",
@@ -1093,18 +1105,6 @@
       "skipped": 2,
       "warnings": 0,
       "durationSeconds": 63.5
-    },
-    {
-      "kind": "offline",
-      "label": "オフライン・PWA",
-      "source": "offline-public-browser-audit.md",
-      "executedAt": "2026-10-12T01:05:12.111Z",
-      "status": "passed",
-      "passed": 10,
-      "failed": 0,
-      "skipped": 0,
-      "warnings": 0,
-      "durationSeconds": 12.8
     },
     {
       "kind": "site-health",
