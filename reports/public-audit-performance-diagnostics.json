@@ -1,19 +1,131 @@
 {
   "schema": "kyokai-public-audit-performance-diagnostics-v1",
-  "generatedAt": "2026-11-02T01:07:31.323Z",
-  "performanceGeneratedAt": "2026-11-02T01:07:27.218Z",
-  "breached": false,
+  "generatedAt": "2026-11-09T01:18:35.839Z",
+  "performanceGeneratedAt": "2026-11-09T01:18:33.140Z",
+  "breached": true,
   "selfTest": false,
   "limits": {
     "commits": 20,
     "files": 40
   },
   "totals": {
-    "windows": 0,
-    "commits": 0,
-    "files": 0,
+    "windows": 1,
+    "commits": 7,
+    "files": 9,
     "siteFiles": 0,
-    "monitoringFiles": 0
+    "monitoringFiles": 9
   },
-  "windows": []
+  "windows": [
+    {
+      "kind": "duration",
+      "label": "オフライン・PWAの所要時間",
+      "source": "offline",
+      "baseTimestamp": "2026-11-08T01:11:23.947Z",
+      "headTimestamp": "2026-11-09T01:17:12.205Z",
+      "baseReportCommit": "806d6bcc73fe00c1c236b2f95ec799da94166565",
+      "headReportCommit": "1fbe0dd72a03234523241f9aee4d60d6f29c8b0f",
+      "baseCommit": "f0688ab12a10d5bbeaef26bf58ab328dd00ccfbf",
+      "headCommit": "4ec837d8fecadae1d9a574c187aad981462c51d1",
+      "commitCount": 7,
+      "commits": [
+        {
+          "sha": "806d6bcc73fe00c1c236b2f95ec799da94166565",
+          "date": "2026-11-08T01:11:25Z",
+          "author": "github-actions[bot]",
+          "subject": "chore: record public offline PWA browser audit"
+        },
+        {
+          "sha": "b16ac856e6b916d3196c99af94cd71b5fe8367e1",
+          "date": "2026-11-08T01:11:42Z",
+          "author": "github-actions[bot]",
+          "subject": "chore: update public monitoring summary"
+        },
+        {
+          "sha": "e7a77ee99a9c39a75d874eca5bf80d4e5883f04b",
+          "date": "2026-11-08T01:11:55Z",
+          "author": "github-actions[bot]",
+          "subject": "chore: update public monitoring summary"
+        },
+        {
+          "sha": "b99f327c4edfaba6405998d334be03fa6a3ecfdd",
+          "date": "2026-11-08T01:40:55Z",
+          "author": "github-actions[bot]",
+          "subject": "chore: update public monitoring summary"
+        },
+        {
+          "sha": "532b83c7b945857e08504e0f0663b6e1192186a5",
+          "date": "2026-11-08T22:01:57Z",
+          "author": "github-actions[bot]",
+          "subject": "chore: record production live site audit"
+        },
+        {
+          "sha": "5952ab9ec6e527747e4f7e1cd03e2a1034b26516",
+          "date": "2026-11-09T01:13:51Z",
+          "author": "github-actions[bot]",
+          "subject": "chore: record public reading and site health audit"
+        },
+        {
+          "sha": "4ec837d8fecadae1d9a574c187aad981462c51d1",
+          "date": "2026-11-09T01:14:10Z",
+          "author": "github-actions[bot]",
+          "subject": "chore: update public monitoring summary"
+        }
+      ],
+      "commitsTruncated": false,
+      "fileCount": 9,
+      "files": [
+        {
+          "status": "M",
+          "file": "reports/live-offline-audit.md",
+          "monitoring": true
+        },
+        {
+          "status": "M",
+          "file": "reports/live-reader-experience-audit.md",
+          "monitoring": true
+        },
+        {
+          "status": "M",
+          "file": "reports/live-series-pages-audit.md",
+          "monitoring": true
+        },
+        {
+          "status": "M",
+          "file": "reports/live-site-audit.md",
+          "monitoring": true
+        },
+        {
+          "status": "M",
+          "file": "reports/offline-public-browser-audit.md",
+          "monitoring": true
+        },
+        {
+          "status": "M",
+          "file": "reports/public-monitoring-history.json",
+          "monitoring": true
+        },
+        {
+          "status": "M",
+          "file": "reports/public-monitoring-summary.md",
+          "monitoring": true
+        },
+        {
+          "status": "M",
+          "file": "reports/reading-public-browser-audit.md",
+          "monitoring": true
+        },
+        {
+          "status": "M",
+          "file": "reports/site-public-health-audit.md",
+          "monitoring": true
+        }
+      ],
+      "filesTruncated": false,
+      "siteFileCount": 0,
+      "monitoringFileCount": 9,
+      "latestDuration": 77.6,
+      "medianDuration": 17.1,
+      "durationRatio": 4.538
+    }
+  ]
 }
