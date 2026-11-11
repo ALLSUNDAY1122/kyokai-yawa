@@ -1,7 +1,43 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-10T04:13:40.769Z",
+  "updatedAt": "2026-11-11T01:29:01.948Z",
   "entries": [
+    {
+      "kind": "incident-config",
+      "label": "障害Issue通知設定",
+      "source": "public-audit-incident-workflow-audit.md",
+      "executedAt": "2026-11-11T01:29:01.948Z",
+      "status": "passed",
+      "passed": null,
+      "failed": 0,
+      "skipped": null,
+      "warnings": 0,
+      "durationSeconds": null
+    },
+    {
+      "kind": "site-health",
+      "label": "54ページ品質（単独確認）",
+      "source": "site-public-health-audit.md",
+      "executedAt": "2026-11-11T01:28:40.773Z",
+      "status": "passed",
+      "passed": 108,
+      "failed": 0,
+      "skipped": 0,
+      "warnings": 0,
+      "durationSeconds": 245.1
+    },
+    {
+      "kind": "reading",
+      "label": "読書機能・54ページ品質",
+      "source": "reading-public-browser-audit.md",
+      "executedAt": "2026-11-11T01:24:33.749Z",
+      "status": "passed",
+      "passed": 36,
+      "failed": 0,
+      "skipped": 2,
+      "warnings": 0,
+      "durationSeconds": 81.4
+    },
     {
       "kind": "incident-config",
       "label": "障害Issue通知設定",
@@ -583,18 +619,6 @@
       "label": "障害Issue通知設定",
       "source": "public-audit-incident-workflow-audit.md",
       "executedAt": "2026-11-05T02:39:04.231Z",
-      "status": "passed",
-      "passed": null,
-      "failed": 0,
-      "skipped": null,
-      "warnings": 0,
-      "durationSeconds": null
-    },
-    {
-      "kind": "incident-config",
-      "label": "障害Issue通知設定",
-      "source": "public-audit-incident-workflow-audit.md",
-      "executedAt": "2026-11-05T02:06:24.987Z",
       "status": "passed",
       "passed": null,
       "failed": 0,
@@ -1417,30 +1441,6 @@
       "skipped": 2,
       "warnings": 0,
       "durationSeconds": 63.5
-    },
-    {
-      "kind": "site-health",
-      "label": "54ページ品質（単独確認）",
-      "source": "site-public-health-audit.md",
-      "executedAt": "2026-10-12T00:47:07.975Z",
-      "status": "passed",
-      "passed": 108,
-      "failed": 0,
-      "skipped": 0,
-      "warnings": 0,
-      "durationSeconds": 262.6
-    },
-    {
-      "kind": "reading",
-      "label": "読書機能・54ページ品質",
-      "source": "reading-public-browser-audit.md",
-      "executedAt": "2026-10-12T00:42:44.221Z",
-      "status": "passed",
-      "passed": 36,
-      "failed": 0,
-      "skipped": 2,
-      "warnings": 0,
-      "durationSeconds": 67.3
     }
   ]
 }
