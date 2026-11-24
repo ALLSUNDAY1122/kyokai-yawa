@@ -1,7 +1,31 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-24T05:47:44.515Z",
+  "updatedAt": "2026-11-24T05:55:55.137Z",
   "entries": [
+    {
+      "kind": "incident-config",
+      "label": "障害Issue通知設定",
+      "source": "public-audit-incident-workflow-audit.md",
+      "executedAt": "2026-11-24T05:55:55.136Z",
+      "status": "passed",
+      "passed": null,
+      "failed": 0,
+      "skipped": null,
+      "warnings": 0,
+      "durationSeconds": null
+    },
+    {
+      "kind": "reading",
+      "label": "読書機能・54ページ品質",
+      "source": "reading-public-browser-audit.md",
+      "executedAt": "2026-11-24T05:52:26.554Z",
+      "status": "passed",
+      "passed": 36,
+      "failed": 0,
+      "skipped": 2,
+      "warnings": 0,
+      "durationSeconds": 75.5
+    },
     {
       "kind": "incident-config",
       "label": "障害Issue通知設定",
@@ -565,18 +589,6 @@
       "skipped": 0,
       "warnings": 0,
       "durationSeconds": 26
-    },
-    {
-      "kind": "incident-config",
-      "label": "障害Issue通知設定",
-      "source": "public-audit-incident-workflow-audit.md",
-      "executedAt": "2026-11-19T02:52:18.433Z",
-      "status": "passed",
-      "passed": null,
-      "failed": 0,
-      "skipped": null,
-      "warnings": 0,
-      "durationSeconds": null
     },
     {
       "kind": "site-health",
@@ -1417,18 +1429,6 @@
       "skipped": 0,
       "warnings": 0,
       "durationSeconds": 209.1
-    },
-    {
-      "kind": "reading",
-      "label": "読書機能・54ページ品質",
-      "source": "reading-public-browser-audit.md",
-      "executedAt": "2026-10-24T23:32:26.414Z",
-      "status": "passed",
-      "passed": 36,
-      "failed": 0,
-      "skipped": 2,
-      "warnings": 0,
-      "durationSeconds": 38.5
     },
     {
       "kind": "site-health",
