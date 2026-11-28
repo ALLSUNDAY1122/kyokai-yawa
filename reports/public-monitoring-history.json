@@ -1,7 +1,43 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-27T04:23:40.290Z",
+  "updatedAt": "2026-11-28T03:32:42.178Z",
   "entries": [
+    {
+      "kind": "incident-config",
+      "label": "障害Issue通知設定",
+      "source": "public-audit-incident-workflow-audit.md",
+      "executedAt": "2026-11-28T03:32:42.178Z",
+      "status": "passed",
+      "passed": null,
+      "failed": 0,
+      "skipped": null,
+      "warnings": 0,
+      "durationSeconds": null
+    },
+    {
+      "kind": "site-health",
+      "label": "54ページ品質（単独確認）",
+      "source": "site-public-health-audit.md",
+      "executedAt": "2026-11-28T03:32:20.365Z",
+      "status": "passed",
+      "passed": 108,
+      "failed": 0,
+      "skipped": 0,
+      "warnings": 0,
+      "durationSeconds": 235.2
+    },
+    {
+      "kind": "reading",
+      "label": "読書機能・54ページ品質",
+      "source": "reading-public-browser-audit.md",
+      "executedAt": "2026-11-28T03:28:23.617Z",
+      "status": "passed",
+      "passed": 36,
+      "failed": 0,
+      "skipped": 2,
+      "warnings": 0,
+      "durationSeconds": 70.5
+    },
     {
       "kind": "incident-config",
       "label": "障害Issue通知設定",
@@ -547,18 +583,6 @@
       "label": "障害Issue通知設定",
       "source": "public-audit-incident-workflow-audit.md",
       "executedAt": "2026-11-22T02:27:53.306Z",
-      "status": "passed",
-      "passed": null,
-      "failed": 0,
-      "skipped": null,
-      "warnings": 0,
-      "durationSeconds": null
-    },
-    {
-      "kind": "incident-config",
-      "label": "障害Issue通知設定",
-      "source": "public-audit-incident-workflow-audit.md",
-      "executedAt": "2026-11-22T01:58:44.932Z",
       "status": "passed",
       "passed": null,
       "failed": 0,
@@ -1407,18 +1431,6 @@
       "durationSeconds": 261
     },
     {
-      "kind": "reading",
-      "label": "読書機能・54ページ品質",
-      "source": "reading-public-browser-audit.md",
-      "executedAt": "2026-10-29T01:09:48.718Z",
-      "status": "passed",
-      "passed": 36,
-      "failed": 0,
-      "skipped": 2,
-      "warnings": 0,
-      "durationSeconds": 50.4
-    },
-    {
       "kind": "site-health",
       "label": "54ページ品質（単独確認）",
       "source": "site-public-health-audit.md",
@@ -1429,18 +1441,6 @@
       "skipped": 0,
       "warnings": 0,
       "durationSeconds": 194
-    },
-    {
-      "kind": "site-health",
-      "label": "54ページ品質（単独確認）",
-      "source": "site-public-health-audit.md",
-      "executedAt": "2026-10-27T00:46:17.620Z",
-      "status": "passed",
-      "passed": 108,
-      "failed": 0,
-      "skipped": 0,
-      "warnings": 0,
-      "durationSeconds": 241
     }
   ]
 }
